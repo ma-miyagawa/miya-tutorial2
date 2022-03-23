@@ -1,0 +1,199 @@
+<< cd >>
+ma-miyagawa@DESKTOP-JF3LIDD:~$ cd ~
+ma-miyagawa@DESKTOP-JF3LIDD:~$ cd ../..
+ma-miyagawa@DESKTOP-JF3LIDD:/$ pwd
+/
+ma-miyagawa@DESKTOP-JF3LIDD:/$ cd ~
+ma-miyagawa@DESKTOP-JF3LIDD:~$ pwd
+/home/ma-miyagawa
+ma-miyagawa@DESKTOP-JF3LIDD:~$ cd ../
+ma-miyagawa@DESKTOP-JF3LIDD:/home$ cd /etc
+
+<< man >>
+ma-miyagawa@DESKTOP-JF3LIDD:/etc$ man pwd
+ma-miyagawa@DESKTOP-JF3LIDD:/etc$ man -a ls
+ma-miyagawa@DESKTOP-JF3LIDD:/etc$ man 1 ls
+
+<< date >>
+ma-miyagawa@DESKTOP-JF3LIDD:/etc$ date
+Wed Mar 23 20:14:43 JST 2022
+ma-miyagawa@DESKTOP-JF3LIDD:/etc$ date "+%Y/%m/%d %H:%M:%S"
+2022/03/23 20:18:52
+
+<< su  sudo >>
+ma-miyagawa@DESKTOP-JF3LIDD:~$ sudo su -
+[sudo] password for ma-miyagawa: 
+Welcome to Ubuntu 20.04.4 LTS (GNU/Linux 5.10.16.3-microsoft-standard-WSL2 x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Wed Mar 23 20:33:31 JST 2022
+
+  System load:  0.0                Processes:             23
+  Usage of /:   0.6% of 250.98GB   Users logged in:       0
+  Memory usage: 3%                 IPv4 address for eth0: 172.22.50.170
+  Swap usage:   0%
+
+1 update can be applied immediately.
+To see these additional updates run: apt list --upgradable
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+
+
+This message is shown once a day. To disable it please create the
+/root/.hushlogin file.
+root@DESKTOP-JF3LIDD:~# 
+
+<< テキスト閲覧 >>
+ma-miyagawa@DESKTOP-JF3LIDD:~$ cat pwdhelp.txt
+PWD(1)                                                   User Commands                                                  PWD(1)
+
+NAME
+       pwd - print name of current/working directory
+
+SYNOPSIS
+       pwd [OPTION]...
+
+DESCRIPTION
+       Print the full filename of the current working directory.
+
+       -L, --logical
+              use PWD from environment, even if it contains symlinks
+
+       -P, --physical
+              avoid all symlinks
+
+       --help display this help and exit
+
+       --version
+              output version information and exit
+
+       If no option is specified, -P is assumed.
+
+       NOTE: your shell may have its own version of pwd, which usually supersedes the version described here.  Please refer to
+       your shell's documentation for details about the options it supports.
+
+AUTHOR
+       Written by Jim Meyering.
+
+REPORTING BUGS
+       GNU coreutils online help: <https://www.gnu.org/software/coreutils/>
+       Report pwd translation bugs to <https://translationproject.org/team/>
+
+COPYRIGHT
+       Copyright (C) 2018 Free Software Foundation, Inc.  License GPLv3+: GNU GPL  version  3  or  later  <https://gnu.org/li-
+       censes/gpl.html>.
+       This  is  free  software: you are free to change and redistribute it.  There is NO WARRANTY, to the extent permitted by
+       law.
+
+SEE ALSO
+       getcwd(3)
+
+       Full documentation at: <https://www.gnu.org/software/coreutils/pwd>
+       or available locally via: info '(coreutils) pwd invocation'
+
+GNU coreutils 8.30                                      September 2019                                                  PWD(1)
+ma-miyagawa@DESKTOP-JF3LIDD:~$ 
+
+<< テキスト操作 >>
+ma-miyagawa@DESKTOP-JF3LIDD:~$ 
+ma-miyagawa@DESKTOP-JF3LIDD:~$ tr a b < date.txt
+Tue Mbr 22 21:18:59 JST 2022
+ma-miyagawa@DESKTOP-JF3LIDD:~$ cut -c 3 date.txt
+e
+ma-miyagawa@DESKTOP-JF3LIDD:~$ cat date.txt
+Tue Mar 22 21:18:59 JST 2022
+ma-miyagawa@DESKTOP-JF3LIDD:~$ cut -f 2 -d ' ' date.txt
+Mar
+
+<< ファイル操作 >>
+ma-miyagawa@DESKTOP-JF3LIDD:~$ ls
+date.txt  lshelp.txt  pwdhelp.txt
+ma-miyagawa@DESKTOP-JF3LIDD:~$ ls /etc
+NetworkManager                 dconf            inputrc          mdadm                    protocols      subgid-
+PackageKit                     debconf.conf     iproute2         mime.types               pulse          subuid
+X11                            debian_version   iscsi            mke2fs.conf              python3        subuid-
+adduser.conf                   default          issue            modprobe.d               python3.8      sudoers
+alternatives                   deluser.conf     issue.net        modules                  rc0.d          sudoers.d
+apparmor                       depmod.d         kernel           modules-load.d           rc1.d          sysctl.conf
+apparmor.d                     dhcp             kernel-img.conf  mtab                     rc2.d          sysctl.d
+apport                         dpkg             landscape        multipath.conf           rc3.d          systemd
+apt                            e2scrub.conf     ld.so.cache      nanorc                   rc4.d          terminfo
+at.deny                        ec2_version      ld.so.conf       netplan                  rc5.d          timezone
+bash.bashrc                    environment      ld.so.conf.d     network                  rc6.d          tmpfiles.d
+bash_completion                ethertypes       ldap             networkd-dispatcher      rcS.d          ubuntu-advantage
+bash_completion.d              fonts            legal            networks                 resolv.conf    ucf.conf
+bindresvport.blacklist         fstab            libaudit.conf    newt                     rmt            udev
+binfmt.d                       fuse.conf        libblockdev      nsswitch.conf            rpc            udisks2
+byobu                          fwupd            locale.alias     opt                      rsyslog.conf   ufw
+ca-certificates                gai.conf         locale.gen       os-release               rsyslog.d      update-manager
+ca-certificates.conf           groff            localtime        overlayroot.conf         screenrc       update-motd.d
+ca-certificates.conf.dpkg-old  group            logcheck         overlayroot.local.conf   security       update-notifier
+calendar                       group-           login.defs       pam.conf                 selinux        vim
+cloud                          gshadow          logrotate.conf   pam.d                    sensors.d      vmware-tools
+console-setup                  gshadow-         logrotate.d      passwd                   sensors3.conf  vtrgb
+cron.d                         gss              lsb-release      passwd-                  services       vulkan
+cron.daily                     hdparm.conf      ltrace.conf      perl                     shadow         wgetrc
+cron.hourly                    host.conf        lvm              pki                      shadow-        xattr.conf
+cron.monthly                   hostname         machine-id       pm                       shells         xdg
+cron.weekly                    hosts            magic            polkit-1                 skel           zsh_command_not_found
+crontab                        hosts.allow      magic.mime       pollinate                sos
+cryptsetup-initramfs           hosts.deny       mailcap          popularity-contest.conf  ssh
+crypttab                       init.d           mailcap.order    profile                  ssl
+dbus-1                         initramfs-tools  manpath.config   profile.d                subgid
+
+ma-miyagawa@DESKTOP-JF3LIDD:~$ ls -R /usr/include
+/usr/include:
+X11  gawkapi.h  iproute2  libdmmp  mpath_cmd.h  mpath_persist.h  sudo_plugin.h  xfs
+
+/usr/include/X11:
+
+/usr/include/iproute2:
+bpf_elf.h
+
+/usr/include/libdmmp:
+libdmmp.h
+
+/usr/include/xfs:
+
+ma-miyagawa@DESKTOP-JF3LIDD:~$ mkdir sub
+ma-miyagawa@DESKTOP-JF3LIDD:~$ cp -i lshelp.txt sub/
+ma-miyagawa@DESKTOP-JF3LIDD:~$ ls sub
+lshelp.txt
+ma-miyagawa@DESKTOP-JF3LIDD:~$ 
+
+ma-miyagawa@DESKTOP-JF3LIDD:~$ mv pwdhelp.txt sub
+ma-miyagawa@DESKTOP-JF3LIDD:~$ ls
+date.txt  lshelp.txt  sub
+ma-miyagawa@DESKTOP-JF3LIDD:~$ ls sub
+lshelp.txt  pwdhelp.txt
+
+ma-miyagawa@DESKTOP-JF3LIDD:~$ rm -r sub
+ma-miyagawa@DESKTOP-JF3LIDD:~$ ls
+date.txt  lshelp.txt
+
+ma-miyagawa@DESKTOP-JF3LIDD:~$ ls -l
+total 12
+-rw-r--r-- 1 ma-miyagawa ma-miyagawa   29 Mar 22 21:18 date.txt
+-rw-r--r-- 1 ma-miyagawa ma-miyagawa 7927 Mar 23 20:37 lshelp.txt
+ma-miyagawa@DESKTOP-JF3LIDD:~$ touch date.txt
+ma-miyagawa@DESKTOP-JF3LIDD:~$ ls -l
+total 12
+-rw-r--r-- 1 ma-miyagawa ma-miyagawa   29 Mar 23 20:59 date.txt
+-rw-r--r-- 1 ma-miyagawa ma-miyagawa 7927 Mar 23 20:37 lshelp.txt
+
+ma-miyagawa@DESKTOP-JF3LIDD:~$ ln -s lshelp.txt symbollnk
+ma-miyagawa@DESKTOP-JF3LIDD:~$ ls -l
+total 12
+-rw-r--r-- 1 ma-miyagawa ma-miyagawa   29 Mar 23 20:59 date.txt
+-rw-r--r-- 1 ma-miyagawa ma-miyagawa 7927 Mar 23 20:37 lshelp.txt
+lrwxrwxrwx 1 ma-miyagawa ma-miyagawa   10 Mar 23 21:05 symbollnk -> lshelp.txt
+
+ma-miyagawa@DESKTOP-JF3LIDD:~$ grep Mar date.txt
+Tue Mar 22 21:18:59 JST 2022
+ma-miyagawa@DESKTOP-JF3LIDD:~$ find . -name '*te*'
+./date.txt
