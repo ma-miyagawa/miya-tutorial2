@@ -1,0 +1,71 @@
+ma-miyagawa@DESKTOP-JF3LIDD:~$ more process.c
+#include <signal.h>
+#include <stdio.h>
+void f(){
+        printf("aaa\n");
+        fflush(stdout);
+}
+int main(){
+        signal(SIGINT, f);
+        while (1);
+        return 0;
+}
+ma-miyagawa@DESKTOP-JF3LIDD:~$ ./process01 &
+[1] 293
+ma-miyagawa@DESKTOP-JF3LIDD:~$ ps
+  PID TTY          TIME CMD
+  143 pts/3    00:00:00 bash
+  293 pts/3    00:00:02 process01
+  321 pts/3    00:00:00 ps
+ma-miyagawa@DESKTOP-JF3LIDD:~$ killall -INT ./process01
+aaa
+ma-miyagawa@DESKTOP-JF3LIDD:~$ ps
+  PID TTY          TIME CMD
+  143 pts/3    00:00:00 bash
+  293 pts/3    00:00:56 process01
+  434 pts/3    00:00:00 ps
+ma-miyagawa@DESKTOP-JF3LIDD:~$ kill 293
+ma-miyagawa@DESKTOP-JF3LIDD:~$ 
+[1]+  Terminated              ./process01
+ma-miyagawa@DESKTOP-JF3LIDD:~$ 
+ma-miyagawa@DESKTOP-JF3LIDD:~$ ps
+  PID TTY          TIME CMD
+  143 pts/3    00:00:00 bash
+  560 pts/3    00:00:00 ps
+ma-miyagawa@DESKTOP-JF3LIDD:~$ 
+ma-miyagawa@DESKTOP-JF3LIDD:~$ vi
+
+[1]+  Stopped                 vi
+ma-miyagawa@DESKTOP-JF3LIDD:~$ jobs -l
+[1]+   661 Stopped                 vi
+ma-miyagawa@DESKTOP-JF3LIDD:~$ 
+ma-miyagawa@DESKTOP-JF3LIDD:~$ jobs %1
+[1]+  Stopped                 vi
+ma-miyagawa@DESKTOP-JF3LIDD:~$ top
+top - 20:07:12 up 14 min,  0 users,  load average: 0.08, 0.07, 0.07
+Tasks:  17 total,   1 running,  16 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  0.0 sy,  0.0 ni, 99.9 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :   6260.5 total,   5961.7 free,    188.9 used,    109.9 buff/cache
+MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   5894.0 avail Mem 
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND                                                      
+   42 ma-miya+  20   0  891528  47888  29732 S   0.7   0.7   0:02.76 node                                                         
+    1 root      20   0     896    528    464 S   0.0   0.0   0:00.03 init                                                         
+   10 root      20   0     896     84     20 S   0.0   0.0   0:00.00 init                                                         
+   11 root      20   0     896     84     20 S   0.0   0.0   0:00.00 init                                                         
+   12 ma-miya+  20   0    2612    592    524 S   0.0   0.0   0:00.00 sh                                                           
+   13 ma-miya+  20   0    2612    584    520 S   0.0   0.0   0:00.00 sh                                                           
+   18 ma-miya+  20   0    2612    592    524 S   0.0   0.0   0:00.00 sh                                                           
+   22 ma-miya+  20   0  924560  60724  31940 S   0.0   0.9   0:02.62 node                                                         
+   33 root      20   0     904     84     20 S   0.0   0.0   0:00.00 init                                                         
+   34 root      20   0     904     88     20 S   0.0   0.0   0:00.17 init                                                         
+   35 ma-miya+  20   0  581168  35492  27116 S   0.0   0.6   0:00.60 node                                                         
+   55 root      20   0     904     84     20 S   0.0   0.0   0:00.00 init                                                         
+   56 root      20   0     904     88     20 S   0.0   0.0   0:00.08 init                                                         
+   57 ma-miya+  20   0  579112  31244  25324 S   0.0   0.5   0:00.35 node                                                         
+  130 ma-miya+  20   0  808216  67372  33984 S   0.0   1.1   0:01.42 node                                                         
+  143 ma-miya+  20   0   10520   5480   3332 S   0.0   0.1   0:00.05 bash                                                         
+ 1150 ma-miya+  20   0   10876   3652   3136 R   0.0   0.1   0:00.00 top                                                          
+
+
+
