@@ -1,0 +1,41 @@
+
+2. UNIXを扱う上での基礎知識
+  (1)簡単なコマンドをたたいた
+
+ma-miyagawa@DESKTOP-JF3LIDD:~$ date
+Tue Mar 22 21:16:11 JST 2022
+ma-miyagawa@DESKTOP-JF3LIDD:~$ date -u
+Tue Mar 22 12:16:16 UTC 2022
+
+  (2)標準入力、標準出力、標準エラー出力の確認を行った
+ma-miyagawa@DESKTOP-JF3LIDD:~$ date > date.txt
+ma-miyagawa@DESKTOP-JF3LIDD:~$ cat date.txt
+Tue Mar 22 21:18:59 JST 2022
+ma-miyagawa@DESKTOP-JF3LIDD:~$ wc
+This is an apple
+My name is mas
+I live in Shiga.      2      12      48
+ma-miyagawa@DESKTOP-JF3LIDD:~$ wc < date.txt
+ 1  6 29
+ma-miyagawa@DESKTOP-JF3LIDD:~$ date | pwd
+/home/ma-miyagawa
+ma-miyagawa@DESKTOP-JF3LIDD:~$ pwd | wc
+      1       1      18
+
+  (3)変数の設定の確認を行った
+ma-miyagawa@DESKTOP-JF3LIDD:~$ a=www
+ma-miyagawa@DESKTOP-JF3LIDD:~$ echo $a
+www
+ma-miyagawa@DESKTOP-JF3LIDD:~$ echo $LANG
+C.UTF-8
+ma-miyagawa@DESKTOP-JF3LIDD:~$ export LANG=ja
+ma-miyagawa@DESKTOP-JF3LIDD:~$ echo $LANG
+ja
+
+  (4)ファイルのパーミッションの確認を行った。
+
+ma-miyagawa@DESKTOP-JF3LIDD:~$ ls -l
+total 4
+-rw-r--r-- 1 ma-miyagawa ma-miyagawa 29 Mar 22 21:18 date.txt
+ma-miyagawa@DESKTOP-JF3LIDD:~$ 
+
