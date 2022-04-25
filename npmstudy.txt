@@ -115,3 +115,15 @@ found 0 vulnerabilities
            "request": "^2.88.2"
         }
 
+【package-lock.json】
+  dependency のバージョンを lock(ロック、固定)するためのファイル
+  package.jsonだけでは同じpackage.jsonでもインストールされる dependency のバージョンが異なってしまうということが起こりうる。
+  package-lock.jsonには dependency、dependency の dependency...と間接的なものも含めすべての dependency のバージョン(とその integrity)が記録される。
+
+
+【結局いつ npm install するのか】
+  開発中のパッケージのソースコードだけ手元にある状態で dependency がインストールされていないとき
+  
+【GitHub でパッケージのコードを見るときの注意点】
+ パッケージのページの Repository の欄をクリックすれば該当の repo に飛ぶことができる。
+ package.jsonのscriptsを見ればどのようなビルド処理をしたのか推測することもできる。
