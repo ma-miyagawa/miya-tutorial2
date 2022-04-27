@@ -1,0 +1,184 @@
+npmとは
+　【バージョンの確認】
+$ npm -v
+8.1.0
+
+　【version コマンド】
+$ npm version
+{
+  npmstudy: '1.0.0',       
+  npm: '8.1.0',
+  node: '16.13.0',
+  v8: '9.4.146.19-node.13',
+  uv: '1.42.0',
+  zlib: '1.2.11',
+  brotli: '1.0.9',
+  ares: '1.17.2',
+  modules: '93',
+  nghttp2: '1.45.1',       
+  napi: '8',
+  llhttp: '6.0.4',
+  openssl: '1.1.1l+quic',  
+  cldr: '39.0',
+  icu: '69.1',
+  tz: '2021a',
+  unicode: '13.0',
+  ngtcp2: '0.1.0-DEV',     
+  nghttp3: '0.1.0-DEV'     
+}
+
+　【npmのコマンドの書式とヘルプ】
+$ npm
+npm <command>
+
+Usage:
+
+npm install        install all the dependencies in your project
+npm install <foo>  add the <foo> dependency to your project
+npm test           run this project's tests
+npm run <foo>      run the script named <foo>
+npm <command> -h   quick help on <command>
+npm -l             display usage info for all commands
+npm help <term>    search for help on <term> (in a browser)
+npm help npm       more involved overview (in a browser)
+
+All commands:
+
+    access, adduser, audit, bin, bugs, cache, ci, completion,
+    config, dedupe, deprecate, diff, dist-tag, docs, doctor,
+    edit, exec, explain, explore, find-dupes, fund, get, help,
+    hook, init, install, install-ci-test, install-test, link,
+    ll, login, logout, ls, org, outdated, owner, pack, ping,
+    pkg, prefix, profile, prune, publish, rebuild, repo,
+    restart, root, run-script, search, set, set-script,
+    shrinkwrap, star, stars, start, stop, team, test, token,
+    uninstall, unpublish, unstar, update, version, view, whoami
+
+Specify configs in the ini-formatted file:
+    C:\Users\mmiya\.npmrc
+or on the command line via: npm <command> --key=value
+
+More configuration info: npm help config
+Configuration fields: npm help 7 config
+
+npm@8.1.0 C:\Program Files\nodejs\node_modules\npm
+
+  <クイックヘルプ>
+$ npm init -h
+npm init
+
+Create a package.json file
+
+Usage:
+npm init [--force|-f|--yes|-y|--scope]
+npm init <@scope> (same as `npx <@scope>/create`)
+npm init [<@scope>/]<name> (same as `npx [<@scope>/]create-<name>`)
+
+Options:
+[-y|--yes] [-f|--force]
+[-w|--workspace <workspace-name> [-w|--workspace <workspace-name> ...]]
+[-ws|--workspaces] [--include-workspace-root]
+
+aliases: create, innit
+
+Run "npm help init" for more info
+
+
+【パッケージのインストール】
+①ローカルインストール
+　　パッケージをカレントディレクトリ配下（プロジェクトごと）の node_modules ディレクトリにインストールします。
+
+②グローバルインストール
+　　パッケージを npm のルート配下の node_modules ディレクトリにインストールします。
+　　
+
+　＜npm のルートの場所＞
+$ npm root -g
+C:\Users\mmiya\AppData\Roaming\npm\node_modules
+
+$ cd Myproj
+$ npm root 
+C:\Personal\npm\Myproj\node_modules
+
+　＜インストールされているパッケージの確認＞
+$ npm list
+C:\Personal\npm\Myproj
+└── (empty)
+
+$ npm list -g --depth=0
+C:\Users\mmiya\AppData\Roaming\npm
+├── @google/clasp@2.4.1
+└── @vue/cli@4.5.13
+
+【パッケージの管理】
+npm は依存関係を解決してパッケージをインストールするだけではなく、
+必要に応じてバージョン管理や本番環境（Production）用、開発環境（Development）用と言ったパッケージ管理が可能です。
+　　package.json　　　　そのプロジェクトでインストールしたパッケージの情報
+　　package-lock.json 　このファイルを使ってパッケージのバージョンを固定する
+
+　＜ローカルインストール＞
+　　・初期化 npm init
+$ npm init -y
+Wrote to C:\Personal\npm\Myproj\package.json:
+
+{
+  "name": "myproj",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
+$ ls
+package.json
+
+　　・インストール npm install
+$ npm install jquery
+
+added 1 package, and audited 2 packages in 4s
+
+found 0 vulnerabilities
+
+$ ls
+node_modules/  package.json  package-lock.json
+
+$ npm list
+myproj@1.0.0 C:\Personal\npm\Myproj
+└── jquery@3.6.0
+
+
+　　・バージョンを指定してインストール
+$ npm install sax@">=0.1.0 <0.2.0"
+
+added 1 package, and audited 3 packages in 3s
+
+found 0 vulnerabilities
+
+$ npm list
+myproj@1.0.0 C:\Personal\npm\Myproj
+├── jquery@3.6.0
+└── sax@0.1.5
+
+【プロジェクトの複製・コピー】
+$ mkdir Myproj2
+$ cd Myproj2
+$ cp ../Myproj/package.json ./
+$ npm install
+
+added 2 packages, and audited 3 packages in 3s
+
+found 0 vulnerabilities
+
+$ ls
+node_modules/  package.json  package-lock.json
+$ cd node_modules
+$ ls 
+jquery/  sax/
+
+　＜--production フラグ＞
+　npm install で --production オプションを指定して実行すると package.json の devDependencies に記載されているパッケージ（パッケージのインストール時に --save-dev オプションを指定してインストールした開発環境用のパッケージ）はインストールされません
+　
