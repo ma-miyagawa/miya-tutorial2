@@ -666,3 +666,4 @@ myproj5@1.0.0 C:\Personal\npm\myProj5
 
 $ $(npm bin)/cowsay
 bash: C:\Personal\npm\myProj5\node_modules\.bin/cowsay: No such file or directory
+
