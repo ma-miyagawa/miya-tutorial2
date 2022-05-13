@@ -1,0 +1,15 @@
+{
+  "name": "myprj",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dispTime.js",
+  "scripts": {
+    "start": "node dispTime.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "moment": "^2.29.3"
+  }
+}

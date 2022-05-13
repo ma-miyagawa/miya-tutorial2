@@ -1,0 +1,129 @@
+【NPM】
+  他の言語のものを含め世界最大のパッケージレジストリ
+
+【npm】
+  Node.js のパッケージを管理するための CLI であり、パッケージを作成したり、
+NPM 上のパッケージをローカルにインストールしたり、自分のパッケージを NPM に
+公開したりと、Node.js の開発に欠かせないツール
+
+【パッケージ】
+  プログラムがたくさん入ったディレクトリ/フォルダーのようなもの
+  世の中にあるパッケージを使えば自分で一からコードを書かなくとも高度な機能を実現することができる。
+
+【プロジェクト＝パッケージ】
+  通常 Node.js のプロジェクトは npm のパッケージ 1 個に対応する。
+  npm にとってパッケージというのはpackage.jsonというファイルの親ディレクトリに含まれるファイル群である。
+
+
+【パッケージの作成】
+  プロジェクト、すなわちパッケージを一から作成するにはまずpackage.jsonを作成する
+
+PS C:\Personal\npm> npm init
+This utility will walk you through creating a package.json file.
+It only covers the most common items, and tries to guess sensible defaults.
+
+See `npm help init` for definitive documentation on these fields
+and exactly what they do.
+
+Use `npm install <pkg>` afterwards to install a package and
+save it as a dependency in the package.json file.
+
+Press ^C at any time to quit.
+package name: (npm) npmstudy
+version: (1.0.0)
+description:
+entry point: (index.js)
+test command:
+git repository:
+keywords:
+author:
+license: (ISC)
+About to write to C:\Personal\npm\package.json:
+
+{
+  "name": "npmstudy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
+
+
+Is this OK? (yes) yes
+npm notice
+npm notice New minor version of npm available! 8.1.0 -> 8.7.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v8.7.0
+npm notice Run npm install -g npm@8.7.0 to update!
+npm notice
+PS C:\Personal\npm> 
+
+【package.jsonの中身】
+{
+  "name": "npmstudy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.88.2"
+  }
+}
+  ・dependencies と devDependencies
+    dependencies と devDependencies の違いであるが、
+    意味としては前者は実行に必要なパッケージ、後者は開発やテストにのみ必要なパッケージ
+  ・scripts
+    簡単に言えばコマンドのエイリアス
+     例　npm testの実行
+PS C:\Personal\npm> npm run test
+
+> npmstudy@1.0.0 test
+> echo "Error: no test specified" && exit 1
+
+"Error: no test specified" 
+
+  ・main
+      そのパッケージを外からインポートするときにどの JavaScript ファイルが入り口であるかを指定するもの
+  ・bin
+      bin に何らかの実行可能ファイルが指定されていると、パッケージ A をインストールすればそれを CLI として実行できるようになる。
+
+【dependencyの編集】
+
+   dependencyの追加の例
+     requestのインストール
+PS C:\Personal\npm> npm install request
+npm WARN deprecated har-validator@5.1.5: this library is no longer supported
+npm WARN deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+npm WARN deprecated request@2.88.2: request has been deprecated, see https://github.com/request/request/issues/3142
+
+added 47 packages, and audited 48 packages in 9s
+
+2 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+     requestのインストールの結果
+        "dependencies": {
+           "request": "^2.88.2"
+        }
+
+【package-lock.json】
+  dependency のバージョンを lock(ロック、固定)するためのファイル
+  package.jsonだけでは同じpackage.jsonでもインストールされる dependency のバージョンが異なってしまうということが起こりうる。
+  package-lock.jsonには dependency、dependency の dependency...と間接的なものも含めすべての dependency のバージョン(とその integrity)が記録される。
+
+
+【結局いつ npm install するのか】
+  開発中のパッケージのソースコードだけ手元にある状態で dependency がインストールされていないとき
+  
+【GitHub でパッケージのコードを見るときの注意点】
+ パッケージのページの Repository の欄をクリックすれば該当の repo に飛ぶことができる。
+ package.jsonのscriptsを見ればどのようなビルド処理をしたのか推測することもできる。
