@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <body>
+    <div id="disp_count">0</div>
+    <input type="button" value="カウントアップ" id="btn_count_up" />
+  </body>
+  <script>
+    // ページが読み込まれたら実行
+    window.onload = function() {
+      // オブジェクトと変数の準備
+      let count_disp = document.getElementById("disp_count");  
+      let count_up_btn = document.getElementById("btn_count_up");
+      let count_value = 0;
+
+      // カウントアップボタンクリック処理
+      count_up_btn.onclick = function (){
+        count_value += 1;
+        count_disp.innerHTML = count_value;
+      };
+    };
+  </script>
+</html>
