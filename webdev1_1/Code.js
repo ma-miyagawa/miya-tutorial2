@@ -1,4 +1,4 @@
 function doGet() {
-	return HtmlService.createTemplateFromFile('index').evaluate();
-  }
+  return HtmlService.createTemplateFromFile('index').evaluate();
+}
   
