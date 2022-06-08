@@ -6,6 +6,7 @@
   <body>
     <div id="disp_count">0</div>
     <input type="button" value="カウントアップ" id="btn_count_up" />
+    <input type="button" value="リセット" id="btn_count_reset" />
   </body>
   <script>
     // ページが読み込まれたら実行
@@ -13,6 +14,7 @@
       // オブジェクトと変数の準備
       const count_disp = document.getElementById("disp_count");  
       const count_up_btn = document.getElementById("btn_count_up");
+      const count_reset_btn = document.getElementById("btn_count_reset");
       let count_value = 0;
 
       // カウントアップボタンクリック処理
@@ -20,6 +22,11 @@
         count_value += 1;
         count_disp.innerHTML = count_value;
       };
+      // カウントリセットボタンクリック処理
+      count_reset_btn.onclick = function (){
+        count_value = 0;
+        count_disp.innerHTML = count_value;
+      }
     };
   </script>
 </html>
