@@ -2,20 +2,11 @@
 <html>
   <head>
     <base target="_top">
-    <?!= HtmlService.createHtmlOutputFromFile('countStyle.css').getContent(); ?>
   </head>
   <body>
-    <div id="overLayUp">
-      <div id="disp_count">0</div>
-    </div>
-    <div class="box" id="overLayDown">
-      <div>
-        <input type="button" value="カウントアップ" id="btn_count_up" />
-      </div>
-      <div>
-        <input type="button" value="リセット" id="btn_count_reset" />
-      </div>
-    </div>
+    <div id="disp_count">0</div>
+    <input type="button" value="カウントアップ" id="btn_count_up" />
+    <input type="button" value="リセット" id="btn_count_reset" />
   </body>
   <script>
     // ページが読み込まれたら実行
