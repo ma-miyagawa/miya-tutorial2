@@ -15,6 +15,9 @@
       <div class="overLaybtn">
         <input type="button" value="リセット" id="btn_count_reset" />
       </div>
+      <div class="overLaybtn">
+        <input type="button" value="保存" id="btn_count_save" />
+      </div>
     </div>
   </body>
   <script>
@@ -24,6 +27,7 @@
       const count_disp = document.getElementById("disp_count");  
       const count_up_btn = document.getElementById("btn_count_up");
       const count_reset_btn = document.getElementById("btn_count_reset");
+      const count_save_btn = document.getElementById("btn_count_save");
       let count_value = 0;
 
       // カウントアップボタンクリック処理
@@ -35,6 +39,11 @@
       count_reset_btn.onclick = function (){
         count_value = 0;
         count_disp.innerHTML = count_value;
+      }
+      // カウント保存ボタンクリック処理
+      count_save_btn.onclick = function (){
+        // 取得した値を setSheetData関数の引数として設定して呼び出します。
+        google.script.run.setSheetData(count_value);
       }
     };
   </script>
