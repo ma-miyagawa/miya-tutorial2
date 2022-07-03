@@ -6,7 +6,7 @@
   </head>
   <body>
     <div class="overLay">
-      <div id="disp_count">0</div>
+      <div id="disp_count"><?= disp_count_val ?></div>
     </div>
     <div class="box">
       <div class="overLaybtn">
@@ -29,7 +29,10 @@
       const count_reset_btn = document.getElementById("btn_count_reset");
       const count_save_btn = document.getElementById("btn_count_save");
       let count_value = 0;
-
+      google.script.run.withSuccessHandler(
+        function(data){count_value = data}
+      ).getInitSheetData();
+ 
       // カウントアップボタンクリック処理
       count_up_btn.onclick = function (){
         count_value += 1;
