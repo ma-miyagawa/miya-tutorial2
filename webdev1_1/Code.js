@@ -10,8 +10,6 @@ function getInitSheetData() {
   const spreadsheet = SpreadsheetApp.openById('1CumINxWvk5xzU7aDvir_vpr887Do5lkDchNcp7-uyhA');
   // シートを特定して取得
   const sheet = spreadsheet.getSheetByName('シート1');
-  // HtmlTemplateオブジェクトを取得
-  const template = HtmlService.createTemplateFromFile('index');
   // シートから値を取得
   let value = sheet.getRange('A1').getValue();
   // シートから取得した値を画面に渡します
