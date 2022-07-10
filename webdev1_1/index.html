@@ -6,7 +6,7 @@
   </head>
   <body>
     <div class="overLay">
-      <div id="disp_count">0</div>
+      <div id="disp_count"><?= disp_count_val ?></div>
     </div>
     <div class="box">
       <div class="overLaybtn">
@@ -28,22 +28,19 @@
       const count_up_btn = document.getElementById("btn_count_up");
       const count_reset_btn = document.getElementById("btn_count_reset");
       const count_save_btn = document.getElementById("btn_count_save");
-      let count_value = 0;
-
+ 
       // カウントアップボタンクリック処理
       count_up_btn.onclick = function (){
-        count_value += 1;
-        count_disp.innerHTML = count_value;
+        count_disp.innerHTML = Number(count_disp.textContent) + 1;
       };
       // カウントリセットボタンクリック処理
       count_reset_btn.onclick = function (){
-        count_value = 0;
-        count_disp.innerHTML = count_value;
+        count_disp.innerHTML = 0;
       }
       // カウント保存ボタンクリック処理
       count_save_btn.onclick = function (){
         // 取得した値を setSheetData関数の引数として設定して呼び出します。
-        google.script.run.setSheetData(count_value);
+        google.script.run.setSheetData(Number(count_disp.textContent));
       }
     };
   </script>
