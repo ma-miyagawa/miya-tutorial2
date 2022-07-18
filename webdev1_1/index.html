@@ -3,45 +3,57 @@
   <head>
     <base target="_top">
     <?!= HtmlService.createHtmlOutputFromFile('countStyle.css').getContent(); ?>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.js"></script>
   </head>
   <body>
-    <div class="overLay">
-      <div id="disp_count"><?= disp_count_val ?></div>
-    </div>
-    <div class="box">
-      <div class="overLaybtn">
-        <input type="button" value="カウントアップ" id="btn_count_up" />
+    <div id="app">
+      <div class="overLay">
+        <div id="disp_count" v-bind:text-content.prop="disp_count_val">0</div>
       </div>
-      <div class="overLaybtn">
-        <input type="button" value="リセット" id="btn_count_reset" />
-      </div>
-      <div class="overLaybtn">
-        <input type="button" value="保存" id="btn_count_save" />
+      <div class="box" v-show="show">
+        <div class="overLaybtn">
+          <input type="button" value="カウントアップ" id="btn_count_up" v-on:click="increment"/>
+        </div>
+        <div class="overLaybtn">
+          <input type="button" value="リセット" id="btn_count_reset" v-on:click="reset" />
+        </div>
+        <div class="overLaybtn">
+          <input type="button" value="保存" id="btn_count_save" v-on:click="save" />
+        </div>
       </div>
     </div>
   </body>
   <script>
-    // ページが読み込まれたら実行
-    window.onload = function() {
-      // オブジェクトと変数の準備
-      const count_disp = document.getElementById("disp_count");  
-      const count_up_btn = document.getElementById("btn_count_up");
-      const count_reset_btn = document.getElementById("btn_count_reset");
-      const count_save_btn = document.getElementById("btn_count_save");
- 
-      // カウントアップボタンクリック処理
-      count_up_btn.onclick = function (){
-        count_disp.innerHTML = Number(count_disp.textContent) + 1;
-      };
-      // カウントリセットボタンクリック処理
-      count_reset_btn.onclick = function (){
-        count_disp.innerHTML = 0;
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        disp_count_val: ' ',
+        show : false
+      },
+      created: function() {
+        //起動時にGAS側からデータを取得する
+        google.script.run.withSuccessHandler(this.initData).getInitSheetData();
+      },
+      methods: {
+        initData: function(returnData) {
+          this.disp_count_val = returnData;
+          // カウンターの初期表示終了後に各ボタンが表示するようにする
+          this.show = true;
+        },
+        // カウントアップボタンクリック処理
+        increment: function() {
+          this.disp_count_val += 1;
+        },
+        // リセットボタンクリック処理
+        reset: function() {
+          this.disp_count_val = 0;
+        },
+        // 保存ボタンクリック処理
+        save: function() {
+          // 取得した値を setSheetData関数の引数として設定して呼び出します。
+          google.script.run.setSheetData(this.disp_count_val);
+        }
       }
-      // カウント保存ボタンクリック処理
-      count_save_btn.onclick = function (){
-        // 取得した値を setSheetData関数の引数として設定して呼び出します。
-        google.script.run.setSheetData(Number(count_disp.textContent));
-      }
-    };
+    })
   </script>
 </html>
