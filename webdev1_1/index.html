@@ -27,29 +27,29 @@
     const vm = new Vue({
       el: '#app',
       data: {
-        disp_count_val: ' ',
+        disp_count_val: '',
         show : false
       },
-      created: function() {
+      created () {
         //起動時にGAS側からデータを取得する
         google.script.run.withSuccessHandler(this.initData).getInitSheetData();
       },
       methods: {
-        initData: function(returnData) {
+        initData (returnData) {
           this.disp_count_val = returnData;
           // カウンターの初期表示終了後に各ボタンが表示するようにする
           this.show = true;
         },
         // カウントアップボタンクリック処理
-        increment: function() {
+        increment () {
           this.disp_count_val += 1;
         },
         // リセットボタンクリック処理
-        reset: function() {
+        reset () {
           this.disp_count_val = 0;
         },
         // 保存ボタンクリック処理
-        save: function() {
+        save () {
           // 取得した値を setSheetData関数の引数として設定して呼び出します。
           google.script.run.setSheetData(this.disp_count_val);
         }
