@@ -1,8 +1,6 @@
 function doGet() {
   // HtmlTemplateオブジェクトを取得
-  const template = HtmlService.createTemplateFromFile('index');
-  template.disp_count_val = getInitSheetData();
-  return template.evaluate();
+  return HtmlService.createTemplateFromFile('index').evaluate();
 }
 
 function getInitSheetData() {
