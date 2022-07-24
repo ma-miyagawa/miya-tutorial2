@@ -4,28 +4,33 @@
     <base target="_top">
     <?!= HtmlService.createHtmlOutputFromFile('countStyle.css').getContent(); ?>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
   </head>
   <body>
     <div id="app">
-      <div class="overLay">
-        <div id="disp_count" v-bind:text-content.prop="disp_count_val">0</div>
-      </div>
-      <div class="box" v-show="show">
-        <div class="overLaybtn">
-          <input type="button" value="カウントアップ" id="btn_count_up" v-on:click="increment"/>
-        </div>
-        <div class="overLaybtn">
-          <input type="button" value="リセット" id="btn_count_reset" v-on:click="reset" />
-        </div>
-        <div class="overLaybtn">
-          <input type="button" value="保存" id="btn_count_save" v-on:click="save" />
-        </div>
-      </div>
+      <v-app>
+        <v-card color="green" class="overLay" v-show="show">
+          <v-card-actions>
+            <v-card-text v-bind:text-content.prop="disp_count_val" id="disp_count">0</v-card-text>
+          </v-card-actions>
+          <v-card-actions>
+            <v-card-text class="d-flex justify-space-around mb-6">
+              <v-btn v-on:click="increment">カウントアップ</v-btn>
+              <v-btn v-on:click="reset">リセット</v-btn>
+              <v-btn v-on:click="save">保存</v-btn>
+            </v-card-text >
+          </v-card-actions>
+        </v-card>
+      </v-app>
     </div>
   </body>
   <script>
     const vm = new Vue({
       el: '#app',
+      vuetify: new Vuetify(),
       data: {
         disp_count_val: '',
         show : false
