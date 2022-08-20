@@ -28,38 +28,18 @@ function setSheetData(value) {
   range.setValue(value);
 }
 
-function isExistCounterTable(connection) {
-  const statement = connection.createStatement();
-  let resultExist = false;
-  let results = statement.executeQuery('SELECT counter FROM counter_table'); 
-  // 更新 or 追加
-  if (results.next()) {
-    // 既に登録済の場合、更新
-    resultExist = true;
-  } else {
-    // 未登録の場合、追加
-    resultExist = false;
-  }
-  // 後処理
-  results.close();
-  statement.close();
-  return resultExist;
-}
-
 function updCounterTable(value) {
   // DB接続
   const connection = dbConnect();
   // 更新 or 追加
-  let execSql = '';
-  if (isExistCounterTable(connection)) {
-    // 既に登録済の場合、更新
-    execSql = 'UPDATE counter_table SET counter = ?';
-  } else {
-    // 未登録の場合、追加
-    execSql = 'INSERT INTO counter_table (counter) values (?)';
-  }
+  let execSql = 'INSERT INTO counter_table (id ,counter) values (?, ?) ';
+  execSql += 'ON DUPLICATE KEY UPDATE ';
+  execSql += 'counter = ? ';
+
   const statement = connection.prepareStatement(execSql);
-  statement.setString(1, value);
+  statement.setInt(1, 1);
+  statement.setInt(2, value);
+  statement.setInt(3, value);
   let count = statement.executeUpdate();  
   // 後処理
   statement.close();

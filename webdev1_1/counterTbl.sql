@@ -1,3 +1,5 @@
 CREATE TABLE counter_table(
-	counter INT comment 'カウンター'
+	id INT NOT NULL,
+	counter INT comment 'カウンター',
+	PRIMARY KEY (id)
 );
