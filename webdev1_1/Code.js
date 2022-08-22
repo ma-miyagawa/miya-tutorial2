@@ -32,9 +32,11 @@ function updCounterTable(value) {
   // DB接続
   const connection = dbConnect();
   // 更新 or 追加
-  let execSql = 'INSERT INTO counter_table (id ,counter) values (?, ?) ';
-  execSql += 'ON DUPLICATE KEY UPDATE ';
-  execSql += 'counter = ? ';
+  const execSql = `
+      INSERT INTO counter_table (id ,counter) values (?, ?)
+      ON DUPLICATE KEY UPDATE 
+      counter = ? 
+    `;
 
   const statement = connection.prepareStatement(execSql);
   statement.setInt(1, 1);
