@@ -2,7 +2,6 @@
 <html>
   <head>
     <base target="_top">
-    <?!= HtmlService.createHtmlOutputFromFile('countStyle.css').getContent(); ?>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
@@ -12,9 +11,9 @@
   <body>
     <div id="app">
       <v-app>
-        <v-card color="green" class="overLay" v-show="show">
+        <v-card color="green" width="400px" class="mx-auto mt-5" v-show="show">
           <v-card-actions>
-            <v-card-text v-bind:text-content.prop="disp_count_val" id="disp_count">0</v-card-text>
+            <v-card-text v-bind:text-content.prop="disp_count_val" class="blue darken-1 white--text font-weight-bold text-h2 text-right rounded ma-5">0</v-card-text>
           </v-card-actions>
           <v-card-actions>
             <v-card-text class="d-flex justify-space-around mb-6">
@@ -37,7 +36,7 @@
       },
       created () {
         //起動時にGAS側からデータを取得する
-        google.script.run.withSuccessHandler(this.initData).getInitSheetData();
+        google.script.run.withSuccessHandler(this.initData).getCouterTable();
       },
       methods: {
         initData (returnData) {
@@ -56,7 +55,7 @@
         // 保存ボタンクリック処理
         save () {
           // 取得した値を setSheetData関数の引数として設定して呼び出します。
-          google.script.run.setSheetData(this.disp_count_val);
+          google.script.run.updCounterTable(this.disp_count_val);
         }
       }
     })
