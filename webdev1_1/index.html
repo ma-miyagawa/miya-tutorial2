@@ -19,10 +19,16 @@
             <v-card-text class="d-flex justify-space-around mb-6">
               <v-btn v-on:click="increment">カウントアップ</v-btn>
               <v-btn v-on:click="reset">リセット</v-btn>
-              <v-btn v-on:click="save">保存</v-btn>
+              <v-btn v-on:click="save" @click="overlay = !overlay">保存</v-btn>
             </v-card-text >
           </v-card-actions>
         </v-card>
+        <v-overlay :value="overlay">
+          <v-progress-circular
+            indeterminate
+            size="64"
+          ></v-progress-circular>
+        </v-overlay>
       </v-app>
     </div>
   </body>
@@ -32,17 +38,21 @@
       vuetify: new Vuetify(),
       data: {
         disp_count_val: '',
-        show : false
+        show : false,
+        overlay: false
       },
-      created () {
+      async created () {
         //起動時にGAS側からデータを取得する
-        google.script.run.withSuccessHandler(this.initData).getCouterTable();
+        await google.script.run.withSuccessHandler(this.initData).withFailureHandler(this.failure).getCouterTable();
       },
       methods: {
         initData (returnData) {
           this.disp_count_val = returnData;
           // カウンターの初期表示終了後に各ボタンが表示するようにする
           this.show = true;
+        },
+        failure (returnData) {
+          alert('失敗しました');
         },
         // カウントアップボタンクリック処理
         increment () {
@@ -53,11 +63,24 @@
           this.disp_count_val = 0;
         },
         // 保存ボタンクリック処理
-        save () {
+        async save () {
           // 取得した値を setSheetData関数の引数として設定して呼び出します。
-          google.script.run.updCounterTable(this.disp_count_val);
-        }
-      }
+          await google.script.run.withSuccessHandler(function(){
+            this.overlay = true;
+            alert('保存しました');
+          }).withFailureHandler(function(){
+            this.overlay = true;
+            alert('失敗しました');
+          }).updCounterTable(this.disp_count_val);
+        }       
+      },
+      watch: {
+        overlay (val) {
+          val && setTimeout(() => {
+            this.overlay = false
+          }, 1000)
+        },
+      },
     })
   </script>
 </html>
