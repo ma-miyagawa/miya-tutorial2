@@ -19,7 +19,7 @@
             <v-card-text class="d-flex justify-space-around mb-6">
               <v-btn v-on:click="increment">カウントアップ</v-btn>
               <v-btn v-on:click="reset">リセット</v-btn>
-              <v-btn v-on:click="save" @click="overlay = !overlay">保存</v-btn>
+              <v-btn v-on:click="save">保存</v-btn>
             </v-card-text >
           </v-card-actions>
         </v-card>
@@ -42,16 +42,22 @@
         overlay: false
       },
       async created () {
+        this.overlay = true;
         //起動時にGAS側からデータを取得する
-        await google.script.run.withSuccessHandler(this.initData).withFailureHandler(this.failure).getCouterTable();
+        await google.script.run.withSuccessHandler(this.initData)
+                                .withFailureHandler(this.failure)
+                                .getCouterTable();
       },
       methods: {
         initData (returnData) {
+          this.overlay = false;
           this.disp_count_val = returnData;
           // カウンターの初期表示終了後に各ボタンが表示するようにする
           this.show = true;
         },
-        failure (returnData) {
+        // 失敗したときの処理
+        failure () {
+          this.overlay = false;
           alert('失敗しました');
         },
         // カウントアップボタンクリック処理
@@ -64,21 +70,28 @@
         },
         // 保存ボタンクリック処理
         async save () {
+          this.overlay = true;
           // 取得した値を setSheetData関数の引数として設定して呼び出します。
-          await google.script.run.withSuccessHandler(function(){
-            this.overlay = true;
-            alert('保存しました');
-          }).withFailureHandler(function(){
-            this.overlay = true;
-            alert('失敗しました');
-          }).updCounterTable(this.disp_count_val);
-        }       
+          await google.script.run.withSuccessHandler(this.saveInform)
+                                  .withFailureHandler(this.saveFailure)
+                                  .updCounterTable(this.disp_count_val);
+        },
+        // 保存できたときの処理
+        saveInform () {
+          this.overlay = false;
+          alert('保存しました');
+        },
+        // 失敗したときの処理
+        saveFailure () {
+          this.overlay = false;
+          alert('失敗しました');
+        },
       },
       watch: {
         overlay (val) {
-          val && setTimeout(() => {
+          if (!val) {
             this.overlay = false
-          }, 1000)
+          }
         },
       },
     })
