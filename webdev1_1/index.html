@@ -44,22 +44,20 @@
       async created () {
         this.overlay = true;
         //起動時にGAS側からデータを取得する
-        await google.script.run.withSuccessHandler(this.initData)
-                                .withFailureHandler(this.failure)
-                                .getCouterTable();
-      },
-      methods: {
-        initData (returnData) {
-          this.overlay = false;
-          this.disp_count_val = returnData;
+        await gasRun('getCouterTable').then(function(retValue){
+          // getCouterTable成功時
+          this.disp_count_val = retValue;
           // カウンターの初期表示終了後に各ボタンが表示するようにする
           this.show = true;
-        },
-        // 失敗したときの処理
-        failure () {
-          this.overlay = false;
+        }.bind(this)).catch(function(){
+          // エラー時
           alert('失敗しました');
-        },
+        }).finally(function(){
+          // 成功、失敗どちらの場合でも呼び出される
+          this.overlay = false;
+        }.bind(this));
+      },
+      methods: {
         // カウントアップボタンクリック処理
         increment () {
           this.disp_count_val += 1;
@@ -72,19 +70,16 @@
         async save () {
           this.overlay = true;
           // 取得した値を setSheetData関数の引数として設定して呼び出します。
-          await google.script.run.withSuccessHandler(this.saveInform)
-                                  .withFailureHandler(this.saveFailure)
-                                  .updCounterTable(this.disp_count_val);
-        },
-        // 保存できたときの処理
-        saveInform () {
-          this.overlay = false;
-          alert('保存しました');
-        },
-        // 失敗したときの処理
-        saveFailure () {
-          this.overlay = false;
-          alert('失敗しました');
+          await gasRun('updCounterTable',this.disp_count_val).then(function(){
+            // updCounterTable成功時
+            alert('保存しました');
+          }).catch(function(){
+            // エラー時
+            alert('失敗しました');
+          }).finally(function(){
+            // 成功、失敗どちらの場合でも呼び出される
+            this.overlay = false;
+          }.bind(this));
         },
       },
       watch: {
@@ -95,5 +90,14 @@
         },
       },
     })
+    function gasRun(func, ...args){
+      return new Promise(function(resolve, reject){
+        google.script.run.withSuccessHandler(function(retValue){
+          resolve(retValue);
+        }).withFailureHandler(function(){
+          reject();
+        })[func](...args);
+      });
+    }
   </script>
 </html>
