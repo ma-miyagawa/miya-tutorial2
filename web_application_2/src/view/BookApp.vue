@@ -243,8 +243,8 @@ export default {
     }
   },
   watch: {
-    selectedDate () {
-      this.editedItem.purchaseDate = this.formatDate(this.selectedDate)
+    selectedDate (val) {
+      this.editedItem.purchaseDate = this.formatDate(val)
     }
   },
   created () {
