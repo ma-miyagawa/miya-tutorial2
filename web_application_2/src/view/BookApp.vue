@@ -236,14 +236,14 @@ export default {
   },
   computed: {
     formTitle () {
-      return this.editedItem.id === -1 ? '書籍登録' : '書籍修正'
+      return this.isAddMode ? '書籍登録' : '書籍修正'
+    },
+    isAddMode () {
+      return this.editedItem.id === -1
     }
   },
   watch: {
-    editDialog (val) {
-      val || this.close()
-    },
-    selectedDate (val) {
+    selectedDate () {
       this.editedItem.purchaseDate = this.formatDate(this.selectedDate)
     }
   },
@@ -295,13 +295,13 @@ export default {
       })
     },
     saveItem () {
-      if (this.editedItem.id > -1) {
-        // 修正の場合
-        Object.assign(this.originalDesserts[this.editedItem.id], this.editedItem)
-      } else {
+      if (this.isAddMode) {
         // 新規登録の場合
         this.editedItem.id = this.originalDesserts.length
         this.originalDesserts.push(this.editedItem)
+      } else {
+        // 修正の場合
+        Object.assign(this.originalDesserts[this.editedItem.id], this.editedItem)
       }
       // 再検索相当処理
       this.searchItem()
