@@ -166,6 +166,25 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+          <v-dialog v-model="deleteDialog" max-width="500px">
+            <v-card>
+              <v-card-title class="text-h5">選択した書籍を削除します。よろしいでしょうか?</v-card-title>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="blue darken-1"
+                  tile
+                  v-on:click="closeDelete">キャンセル
+                </v-btn>
+                <v-btn
+                  color="blue darken-1"
+                  tile
+                  v-on:click="deleteItemConfirm">はい
+                </v-btn>
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-toolbar>
       </template>
       <template v-slot:[`item.update`]="{ item }">
@@ -202,6 +221,7 @@ export default {
   data () {
     return {
       editDialog: false,
+      deleteDialog: false,
       searchTitle: '',
       searchGenre: '',
       headers: [
@@ -285,19 +305,43 @@ export default {
       // 修正画面ダイアログオープン
       this.editDialog = true
     },
-    deleteItem  (item) {
+    deleteItem (item) {
+      // 選択行の内容を修正画面の項目に設定
+      this.editedItem = Object.assign({}, item)
+      // 削除確認画面ダイアログオープン
+      this.deleteDialog = true
+    },
+    deleteItemConfirm () {
+      // DBから対象行を削除
+      let idx = this.originalDesserts.findIndex((originalDessert) => originalDessert.id === this.editedItem.id)
+      this.originalDesserts.splice(idx, 1)
+      // 再検索相当処理
+      this.searchItem()
+      // 閉じる
+      this.closeDelete()
     },
     close () {
-      // 新規登録／修正画面ダイアログオープン
+      // 新規登録／修正画面ダイアログクローズ
       this.editDialog = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+      })
+    },
+    closeDelete () {
+      // 削除確認画面ダイアログクローズ
+      this.deleteDialog = false
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
       })
     },
     saveItem () {
       if (this.isAddMode) {
-        // 新規登録の場合
-        this.editedItem.id = this.originalDesserts.length
+        // 新規登録の場合(idは最後のレコードのid + 1)
+        if (this.originalDesserts.length === 0) {
+          this.editedItem.id = 0
+        } else {
+          this.editedItem.id = this.originalDesserts[this.originalDesserts.length - 1].id + 1
+        }
         this.originalDesserts.push(this.editedItem)
       } else {
         // 修正の場合
