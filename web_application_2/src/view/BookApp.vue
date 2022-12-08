@@ -28,6 +28,7 @@
         >
           <v-btn
             tile
+            class="white--text"
             color="light-blue"
             style="top: -12px"
             v-on:click="searchItem()"
@@ -150,6 +151,7 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn
+                  class="white--text"
                   color="blue darken-1"
                   tile
                   v-on:click="close(item)"
@@ -157,6 +159,7 @@
                   キャンセル
                 </v-btn>
                 <v-btn
+                  class="white--text"
                   color="blue darken-1"
                   tile
                   v-on:click="saveItem(item)"
@@ -172,11 +175,13 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn
+                  class="white--text"
                   color="blue darken-1"
                   tile
                   v-on:click="closeDelete">キャンセル
                 </v-btn>
                 <v-btn
+                  class="white--text"
                   color="blue darken-1"
                   tile
                   v-on:click="deleteItemConfirm">はい
@@ -250,8 +255,10 @@ export default {
         review: '',
         id: -1
       },
+      deleteItemId: -1,
       selectedDate: '',
-      calendarMenu: false
+      calendarMenu: false,
+      maxId: 0
     }
   },
   computed: {
@@ -273,16 +280,17 @@ export default {
   methods: {
     initialize () {
       this.viewDesserts = [
-        { title: 'タイトル１', genre: 'ジャンル１', purchaseDate: '2022/11/11', buyer: '宮川', review: 'AAAA1', id: 0 },
-        { title: 'タイトル２', genre: 'ジャンル１', purchaseDate: '2022/11/12', buyer: '松尾', review: 'AAAA2', id: 1 },
-        { title: 'タイトル３', genre: 'ジャンル２', purchaseDate: '2022/11/13', buyer: '嶋田', review: 'AAAA3', id: 2 },
-        { title: 'タイトル４', genre: 'ジャンル１', purchaseDate: '2022/11/14', buyer: '横山', review: 'AAAA4', id: 3 },
-        { title: 'タイトル４', genre: 'ジャンル１', purchaseDate: '2022/11/15', buyer: '轟', review: 'AAAA5', id: 4 },
-        { title: 'タイトル４', genre: 'ジャンル１', purchaseDate: '2022/11/16', buyer: '野瀬', review: 'AAAA6', id: 5 },
-        { title: 'タイトル２', genre: 'ジャンル２', purchaseDate: '2022/11/17', buyer: '西埜', review: 'AAAA7', id: 6 }
+        { title: 'タイトル１', genre: 'ジャンル１', purchaseDate: '2022/11/11', buyer: '宮川', review: 'AAAA1', id: 1 },
+        { title: 'タイトル２', genre: 'ジャンル１', purchaseDate: '2022/11/12', buyer: '松尾', review: 'AAAA2', id: 2 },
+        { title: 'タイトル３', genre: 'ジャンル２', purchaseDate: '2022/11/13', buyer: '嶋田', review: 'AAAA3', id: 3 },
+        { title: 'タイトル４', genre: 'ジャンル１', purchaseDate: '2022/11/14', buyer: '横山', review: 'AAAA4', id: 4 },
+        { title: 'タイトル４', genre: 'ジャンル１', purchaseDate: '2022/11/15', buyer: '轟', review: 'AAAA5', id: 5 },
+        { title: 'タイトル４', genre: 'ジャンル１', purchaseDate: '2022/11/16', buyer: '野瀬', review: 'AAAA6', id: 6 },
+        { title: 'タイトル２', genre: 'ジャンル２', purchaseDate: '2022/11/17', buyer: '西埜', review: 'AAAA7', id: 7 }
       ]
       // DBから取得した全データ作成
       this.originalDesserts = cloneDeep(this.viewDesserts)
+      this.maxId = 7
     },
     searchItem () {
       // 初期化
@@ -306,14 +314,14 @@ export default {
       this.editDialog = true
     },
     deleteItem (item) {
-      // 選択行の内容を修正画面の項目に設定
-      this.editedItem = Object.assign({}, item)
+      // 選択行のIDをdeleteItemIdに設定
+      this.deleteItemId = item.id
       // 削除確認画面ダイアログオープン
       this.deleteDialog = true
     },
     deleteItemConfirm () {
       // DBから対象行を削除
-      let idx = this.originalDesserts.findIndex((originalDessert) => originalDessert.id === this.editedItem.id)
+      const idx = this.originalDesserts.findIndex((originalDessert) => originalDessert.id === this.deleteItemId)
       this.originalDesserts.splice(idx, 1)
       // 再検索相当処理
       this.searchItem()
@@ -330,22 +338,17 @@ export default {
     closeDelete () {
       // 削除確認画面ダイアログクローズ
       this.deleteDialog = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-      })
     },
     saveItem () {
       if (this.isAddMode) {
-        // 新規登録の場合(idは最後のレコードのid + 1)
-        if (this.originalDesserts.length === 0) {
-          this.editedItem.id = 0
-        } else {
-          this.editedItem.id = this.originalDesserts[this.originalDesserts.length - 1].id + 1
-        }
+        // 新規登録の場合
+        this.maxId += 1
+        this.editedItem.id = this.maxId
         this.originalDesserts.push(this.editedItem)
       } else {
         // 修正の場合
-        Object.assign(this.originalDesserts[this.editedItem.id], this.editedItem)
+        const idx = this.originalDesserts.findIndex((originalDessert) => originalDessert.id === this.editedItem.id)
+        Object.assign(this.originalDesserts[idx], this.editedItem)
       }
       // 再検索相当処理
       this.searchItem()
