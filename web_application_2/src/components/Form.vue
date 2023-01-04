@@ -87,7 +87,7 @@
             class="white--text"
             color="blue darken-1"
             tile
-            v-on:click="close(item)"
+            v-on:click="close()"
           >
             キャンセル
           </v-btn>
@@ -95,7 +95,7 @@
             class="white--text"
             color="blue darken-1"
             tile
-            v-on:click="saveItem(item)"
+            v-on:click="saveItem()"
           >
             保存
           </v-btn>
@@ -111,13 +111,13 @@
             class="white--text"
             color="blue darken-1"
             tile
-            v-on:click="closeDelete">キャンセル
+            v-on:click="closeDelete()">キャンセル
           </v-btn>
           <v-btn
             class="white--text"
             color="blue darken-1"
             tile
-            v-on:click="deleteItemConfirm">はい
+            v-on:click="deleteItemConfirm()">はい
           </v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
@@ -127,18 +127,9 @@
 </template>
 
 <script>
-import { searchExec } from '../modules/util'
 export default {
   data () {
     return {
-      defaultItem: {
-        title: '',
-        genre: '',
-        purchaseDate: '',
-        buyer: '',
-        review: '',
-        id: -1
-      },
       selectedDate: '',
       calendarMenu: false
     }
@@ -146,7 +137,6 @@ export default {
   props: {
     editDialog: Boolean,
     confirmDialog: Boolean,
-    deleteItemId: Number,
     editedItem: {
       title: String,
       genre: String,
@@ -154,13 +144,8 @@ export default {
       buyer: String,
       review: String,
       id: Number
-    },
-    originalDesserts: [],
-    searchTitle: String,
-    searchGenre: String,
-    maxId: Number
+    }
   },
-  created () {},
   computed: {
     formTitle () {
       return this.isAddMode ? '書籍登録' : '書籍修正'
@@ -180,33 +165,16 @@ export default {
       this.$emit('editCancel')
     },
     saveItem () {
-      if (this.isAddMode) {
-        // 新規登録の場合
-        this.maxId += 1
-        this.editedItem.id = this.maxId
-        this.originalDesserts.push(this.editedItem)
-      } else {
-        // 修正の場合
-        const idx = this.originalDesserts.findIndex((originalDessert) => originalDessert.id === this.editedItem.id)
-        Object.assign(this.originalDesserts[idx], this.editedItem)
-      }
-      // 再検索相当処理
-      const searchDesserts = searchExec(this.originalDesserts, this.searchTitle, this.searchGenre)
-      // 表示データ設定
-      this.$emit('saveResult', searchDesserts, this.originalDesserts)
-    },
-    deleteItemConfirm () {
-      // DBから対象行を削除
-      const idx = this.originalDesserts.findIndex((originalDessert) => originalDessert.id === this.deleteItemId)
-      this.originalDesserts.splice(idx, 1)
-      // 再検索相当処理
-      const searchDesserts = searchExec(this.originalDesserts, this.searchTitle, this.searchGenre)
-      // 表示データ設定
-      this.$emit('deleteResult', searchDesserts, this.originalDesserts)
+      // 更新処理
+      this.$emit('saveResult', this.isAddMode)
     },
     closeDelete () {
       // 削除確認画面ダイアログクローズ
       this.$emit('confirmCancel')
+    },
+    deleteItemConfirm () {
+      // 削除処理
+      this.$emit('deleteResult')
     },
     formatDate (date) {
       if (!date) return null

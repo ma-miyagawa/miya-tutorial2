@@ -31,7 +31,7 @@
             class="white--text"
             color="light-blue"
             style="top: -12px"
-            v-on:click="searchItem()"
+            v-on:click="searchItem"
           >
             <v-icon left>
               mdi-magnify
@@ -45,7 +45,6 @@
 </template>
 
 <script>
-import { searchExec } from '../modules/util'
 export default {
   data () {
     return {
@@ -53,15 +52,10 @@ export default {
       searchGenre: ''
     }
   },
-  props: {
-    originalDesserts: []
-  },
   methods: {
     searchItem () {
-      // DBから取得した全データを取得
-      const searchDesserts = searchExec(this.originalDesserts, this.searchTitle, this.searchGenre)
       // 表示データ設定
-      this.$emit('searchResult', searchDesserts, this.searchTitle, this.searchGenre)
+      this.$emit('searchResult', this.searchTitle, this.searchGenre)
     }
   }
 }

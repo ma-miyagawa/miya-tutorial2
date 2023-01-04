@@ -1,20 +1,14 @@
 <template>
   <div>
-    <Search :originalDesserts='originalDesserts'
-            @searchResult="searchResult">
-    </Search>
-    <List :viewDesserts='viewDesserts'
+    <Search @searchResult="searchResult"></Search>
+    <List :viewDesserts="viewDesserts"
           @editOpen="editOpen"
+          @addOpen="addOpen"
           @confirmOpen="confirmOpen">
     </List>
-    <Form :editDialog='editDialog'
-          :confirmDialog='confirmDialog'
-          :deleteItemId='deleteItemId'
-          :editedItem='editedItem'
-          :originalDesserts='originalDesserts'
-          :searchTitle='searchTitle'
-          :searchGenre='searchGenre'
-          :maxId='maxId'
+    <Form :editDialog="editDialog"
+          :confirmDialog="confirmDialog"
+          :editedItem="editedItem"
           @saveResult="saveResult"
           @deleteResult="deleteResult"
           @editCancel="editCancel"
@@ -50,6 +44,14 @@ export default Vue.extend({
         review: '',
         id: -1
       },
+      defaultItem: {
+        title: '',
+        genre: '',
+        purchaseDate: '',
+        buyer: '',
+        review: '',
+        id: -1
+      },
       searchTitle: '',
       searchGenre: '',
       maxId: 0
@@ -72,30 +74,47 @@ export default Vue.extend({
       this.originalDesserts = cloneDeep(this.viewDesserts)
       this.maxId = 7
     },
-    searchResult (searchDesserts, searchTitle, searchGenre) {
-      // 表示データ設定
-      this.viewDesserts = cloneDeep(searchDesserts)
+    searchResult (searchTitle, searchGenre) {
       this.searchTitle = searchTitle
       this.searchGenre = searchGenre
+      // 検索処理
+      this.viewDesserts = this.searchExec()
     },
-    saveResult (searchDesserts, originalDesserts) {
-      // 表示データ設定
-      this.viewDesserts = cloneDeep(searchDesserts)
-      this.originalDesserts = cloneDeep(originalDesserts)
+    saveResult (isAddMode) {
+      if (isAddMode) {
+        // 新規登録の場合
+        this.maxId += 1
+        this.editedItem.id = this.maxId
+        this.originalDesserts.push(this.editedItem)
+      } else {
+        // 修正の場合
+        const idx = this.originalDesserts.findIndex((originalDessert) => originalDessert.id === this.editedItem.id)
+        Object.assign(this.originalDesserts[idx], this.editedItem)
+      }
+      // 再検索相当処理
+      this.viewDesserts = this.searchExec()
       // 登録・修正画面ダイアログクローズ
       this.editDialog = false
     },
-    deleteResult (searchDesserts, originalDesserts) {
-      // 表示データ設定
-      this.viewDesserts = cloneDeep(searchDesserts)
-      this.originalDesserts = cloneDeep(originalDesserts)
+    deleteResult () {
+      // DBから対象行を削除
+      const idx = this.originalDesserts.findIndex((originalDessert) => originalDessert.id === this.deleteItemId)
+      this.originalDesserts.splice(idx, 1)
+      // 再検索相当処理
+      this.viewDesserts = this.searchExec()
       // 削除確認画面ダイアログクローズ
       this.confirmDialog = false
+    },
+    addOpen () {
+      // 選択行の内容を登録画面の項目に設定
+      this.editedItem = Object.assign({}, this.defaultItem)
+      // 登録画面ダイアログオープン
+      this.editDialog = true
     },
     editOpen (item) {
       // 選択行の内容を修正画面の項目に設定
       this.editedItem = Object.assign({}, item)
-      // 登録・修正画面ダイアログオープン
+      // 修正画面ダイアログオープン
       this.editDialog = true
     },
     editCancel () {
@@ -111,6 +130,18 @@ export default Vue.extend({
     confirmCancel () {
       // 削除確認画面ダイアログクローズ
       this.confirmDialog = false
+    },
+    searchExec () {
+      const cloneDeep = require('lodash/cloneDeep')
+      let searchDesserts = cloneDeep(this.originalDesserts)
+      // フィルター
+      if (this.searchTitle.length > 0) {
+        searchDesserts = searchDesserts.filter((dessert) => dessert.title === this.searchTitle)
+      }
+      if (this.searchGenre.length > 0) {
+        searchDesserts = searchDesserts.filter((dessert) => dessert.genre.indexOf(this.searchGenre) !== -1)
+      }
+      return searchDesserts
     }
   }
 })

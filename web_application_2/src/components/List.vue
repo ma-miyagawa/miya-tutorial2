@@ -15,7 +15,7 @@
                 color="primary"
                 dark
                 class="mb-2"
-                v-on:click="addItem(item)"
+                v-on:click="addItem()"
               >
                 <v-icon left>
                   mdi-arrow-up-bold-box-outline
@@ -63,30 +63,20 @@ export default {
         { text: '購入者', align: 'start', sortable: false, value: 'buyer', width: '15%' },
         { text: '更新', sortable: false, value: 'update', width: '5%' },
         { text: '削除', sortable: false, value: 'delete', width: '5%' }
-      ],
-      defaultItem: {
-        title: '',
-        genre: '',
-        purchaseDate: '',
-        buyer: '',
-        review: '',
-        id: -1
-      }
+      ]
     }
   },
   props: {
     viewDesserts: []
   },
-  created () {},
-  computed: {},
   methods: {
     editItem (item) {
       // 表示データ設定
       this.$emit('editOpen', item)
     },
-    addItem (item) {
+    addItem () {
       // 表示データ設定
-      this.$emit('editOpen', this.defaultItem)
+      this.$emit('addOpen')
     },
     deleteItem (item) {
       // 表示データ設定
