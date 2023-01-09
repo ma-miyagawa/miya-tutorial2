@@ -2,17 +2,23 @@
   <div>
     <Search @searchResult="searchResult"></Search>
     <List :viewDesserts="viewDesserts"
+          :confirmDialog="confirmDialog"
           @editOpen="editOpen"
           @addOpen="addOpen"
-          @confirmOpen="confirmOpen">
+          @confirmOpen="confirmOpen"
+          @deleteResult="deleteResult"
+          @confirmCancel="confirmCancel">
     </List>
     <Form :editDialog="editDialog"
-          :confirmDialog="confirmDialog"
           :editedItem="editedItem"
           @saveResult="saveResult"
-          @deleteResult="deleteResult"
           @editCancel="editCancel"
-          @confirmCancel="confirmCancel">
+          @changeTitle="changeTitle"
+          @changeGenre="changeGenre"
+          @changePurchaseDate="changePurchaseDate"
+          @changeBuyer="changeBuyer"
+          @changeReview="changeReview"
+          >
     </Form>
   </div>
 </template>
@@ -142,6 +148,21 @@ export default Vue.extend({
         searchDesserts = searchDesserts.filter((dessert) => dessert.genre.indexOf(this.searchGenre) !== -1)
       }
       return searchDesserts
+    },
+    changeTitle (title) {
+      this.editedItem.title = title
+    },
+    changeGenre (genre) {
+      this.editedItem.genre = genre
+    },
+    changePurchaseDate (purchaseDate) {
+      this.editedItem.purchaseDate = purchaseDate
+    },
+    changeBuyer (buyer) {
+      this.editedItem.buyer = buyer
+    },
+    changeReview (review) {
+      this.editedItem.review = review
     }
   }
 })

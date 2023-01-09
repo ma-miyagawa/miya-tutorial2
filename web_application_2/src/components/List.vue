@@ -49,6 +49,27 @@
         </v-btn>
       </template>
     </v-data-table>
+    <v-dialog v-model="confirmDialog" max-width="500px">
+      <v-card>
+        <v-card-title class="text-h5">選択した書籍を削除します。よろしいでしょうか?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            class="white--text"
+            color="blue darken-1"
+            tile
+            v-on:click="closeDelete()">キャンセル
+          </v-btn>
+          <v-btn
+            class="white--text"
+            color="blue darken-1"
+            tile
+            v-on:click="deleteItemConfirm()">はい
+          </v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -67,7 +88,8 @@ export default {
     }
   },
   props: {
-    viewDesserts: []
+    viewDesserts: [],
+    confirmDialog: Boolean
   },
   methods: {
     editItem (item) {
@@ -81,6 +103,14 @@ export default {
     deleteItem (item) {
       // 表示データ設定
       this.$emit('confirmOpen', item)
+    },
+    closeDelete () {
+      // 削除確認画面ダイアログクローズ
+      this.$emit('confirmCancel')
+    },
+    deleteItemConfirm () {
+      // 削除処理
+      this.$emit('deleteResult')
     }
   }
 }

@@ -15,15 +15,15 @@
                 cols="6"
               >
                 <v-text-field
-                  v-model="editedItem.title"
-                    label="タイトル"
+                  v-model="innerTitle"
+                  label="タイトル"
                 ></v-text-field>
               </v-col>
               <v-col
                 cols="6"
               >
                 <v-text-field
-                  v-model="editedItem.genre"
+                  v-model="innerGenre"
                   label="ジャンル"
                 ></v-text-field>
               </v-col>
@@ -43,12 +43,12 @@
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                      v-model="editedItem.purchaseDate"
+                      v-model="innerPurchaseDate"
                       label="購入日"
                       prepend-icon="mdi-calendar"
                       readonly
                       v-bind="attrs"
-                      v-on:click="selectedDate = parseDate(editedItem.purchaseDate)"
+                      v-on:click="selectedDate = parseDate(innerPurchaseDate)"
                       v-on="on"
                     ></v-text-field>
                   </template>
@@ -63,7 +63,7 @@
                 cols="6"
               >
                 <v-text-field
-                  v-model="editedItem.buyer"
+                  v-model="innerBuyer"
                   label="購入者"
                 ></v-text-field>
               </v-col>
@@ -73,7 +73,7 @@
                 cols="12"
               >
                 <v-textarea
-                  v-model="editedItem.review"
+                  v-model="innerReview"
                   name="input-7-1"
                   label="レビュー内容"
                 ></v-textarea>
@@ -102,27 +102,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="confirmDialog" max-width="500px">
-      <v-card>
-        <v-card-title class="text-h5">選択した書籍を削除します。よろしいでしょうか?</v-card-title>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            class="white--text"
-            color="blue darken-1"
-            tile
-            v-on:click="closeDelete()">キャンセル
-          </v-btn>
-          <v-btn
-            class="white--text"
-            color="blue darken-1"
-            tile
-            v-on:click="deleteItemConfirm()">はい
-          </v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
@@ -136,7 +115,6 @@ export default {
   },
   props: {
     editDialog: Boolean,
-    confirmDialog: Boolean,
     editedItem: {
       title: String,
       genre: String,
@@ -152,11 +130,48 @@ export default {
     },
     isAddMode () {
       return this.editedItem.id === -1
+    },
+    innerTitle: {
+      get () {
+        return this.$props.editedItem.title
+      },
+      set (val) {
+        this.$emit('changeTitle', val)
+      }
+    },
+    innerGenre: {
+      get () {
+        return this.$props.editedItem.genre
+      },
+      set (val) {
+        this.$emit('changeGenre', val)
+      }
+    },
+    innerPurchaseDate: {
+      get () {
+        return this.$props.editedItem.purchaseDate
+      }
+    },
+    innerBuyer: {
+      get () {
+        return this.$props.editedItem.buyer
+      },
+      set (val) {
+        this.$emit('changeBuyer', val)
+      }
+    },
+    innerReview: {
+      get () {
+        return this.$props.editedItem.review
+      },
+      set (val) {
+        this.$emit('changeReview', val)
+      }
     }
   },
   watch: {
     selectedDate (val) {
-      this.editedItem.purchaseDate = this.formatDate(val)
+      this.$emit('changePurchaseDate', this.formatDate(val))
     }
   },
   methods: {
@@ -167,14 +182,6 @@ export default {
     saveItem () {
       // 更新処理
       this.$emit('saveResult', this.isAddMode)
-    },
-    closeDelete () {
-      // 削除確認画面ダイアログクローズ
-      this.$emit('confirmCancel')
-    },
-    deleteItemConfirm () {
-      // 削除処理
-      this.$emit('deleteResult')
     },
     formatDate (date) {
       if (!date) return null
