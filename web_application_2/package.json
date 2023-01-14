@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.7.6",
-    "@types/google-apps-script": "^1.0.7",
+    "@types/google-apps-script": "^1.0.57",
     "@vue/cli-plugin-babel": "^4.0.0",
     "@vue/cli-plugin-eslint": "^4.0.0",
     "@vue/cli-plugin-router": "^4.0.0",

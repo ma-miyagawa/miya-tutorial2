@@ -28,6 +28,7 @@ import Search from '../components/Search.vue'
 import List from '../components/List.vue'
 import Form from '../components/Form.vue'
 
+import getBooksTable from '../../server/functions/execTable'
 const cloneDeep = require('lodash/cloneDeep')
 export default Vue.extend({
   components: {
@@ -68,15 +69,7 @@ export default Vue.extend({
   },
   methods: {
     initialize () {
-      this.viewDesserts = [
-        { title: 'タイトル１', genre: 'ジャンル１', purchaseDate: '2022/11/11', buyer: '宮川', review: 'AAAA1', id: 1 },
-        { title: 'タイトル２', genre: 'ジャンル１', purchaseDate: '2022/11/12', buyer: '松尾', review: 'AAAA2', id: 2 },
-        { title: 'タイトル３', genre: 'ジャンル２', purchaseDate: '2022/11/13', buyer: '嶋田', review: 'AAAA3', id: 3 },
-        { title: 'タイトル４', genre: 'ジャンル１', purchaseDate: '2022/11/14', buyer: '横山', review: 'AAAA4', id: 4 },
-        { title: 'タイトル４', genre: 'ジャンル１', purchaseDate: '2022/11/15', buyer: '轟', review: 'AAAA5', id: 5 },
-        { title: 'タイトル４', genre: 'ジャンル１', purchaseDate: '2022/11/16', buyer: '野瀬', review: 'AAAA6', id: 6 },
-        { title: 'タイトル２', genre: 'ジャンル２', purchaseDate: '2022/11/17', buyer: '西埜', review: 'AAAA7', id: 7 }
-      ]
+      this.viewDesserts = getBooksTable()
       this.originalDesserts = cloneDeep(this.viewDesserts)
       this.maxId = 7
     },
