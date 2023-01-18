@@ -20,6 +20,12 @@
           @changeReview="changeReview"
           >
     </Form>
+    <v-overlay v-model="overlay">
+      <v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular>
+    </v-overlay>
   </div>
 </template>
 <script>
@@ -28,8 +34,8 @@ import Search from '../components/Search.vue'
 import List from '../components/List.vue'
 import Form from '../components/Form.vue'
 
-import getBooksTable from '../../server/functions/execTable'
 const cloneDeep = require('lodash/cloneDeep')
+const google = window.google
 export default Vue.extend({
   components: {
     Search,
@@ -42,6 +48,7 @@ export default Vue.extend({
       viewDesserts: [],
       editDialog: false,
       confirmDialog: false,
+      overlay: false,
       deleteItemId: -1,
       editedItem: {
         title: '',
@@ -65,19 +72,15 @@ export default Vue.extend({
     }
   },
   created () {
-    this.initialize()
+    // 初期検索処理
+    this.searchExec()
   },
   methods: {
-    initialize () {
-      this.viewDesserts = getBooksTable()
-      this.originalDesserts = cloneDeep(this.viewDesserts)
-      this.maxId = 7
-    },
     searchResult (searchTitle, searchGenre) {
       this.searchTitle = searchTitle
       this.searchGenre = searchGenre
       // 検索処理
-      this.viewDesserts = this.searchExec()
+      this.searchExec()
     },
     saveResult (isAddMode) {
       if (isAddMode) {
@@ -91,7 +94,7 @@ export default Vue.extend({
         Object.assign(this.originalDesserts[idx], this.editedItem)
       }
       // 再検索相当処理
-      this.viewDesserts = this.searchExec()
+      this.searchExec()
       // 登録・修正画面ダイアログクローズ
       this.editDialog = false
     },
@@ -100,7 +103,7 @@ export default Vue.extend({
       const idx = this.originalDesserts.findIndex((originalDessert) => originalDessert.id === this.deleteItemId)
       this.originalDesserts.splice(idx, 1)
       // 再検索相当処理
-      this.viewDesserts = this.searchExec()
+      this.searchExec()
       // 削除確認画面ダイアログクローズ
       this.confirmDialog = false
     },
@@ -130,17 +133,18 @@ export default Vue.extend({
       // 削除確認画面ダイアログクローズ
       this.confirmDialog = false
     },
-    searchExec () {
-      const cloneDeep = require('lodash/cloneDeep')
-      let searchDesserts = cloneDeep(this.originalDesserts)
-      // フィルター
-      if (this.searchTitle.length > 0) {
-        searchDesserts = searchDesserts.filter((dessert) => dessert.title === this.searchTitle)
-      }
-      if (this.searchGenre.length > 0) {
-        searchDesserts = searchDesserts.filter((dessert) => dessert.genre.indexOf(this.searchGenre) !== -1)
-      }
-      return searchDesserts
+    async searchExec () {
+      this.overlay = true
+      await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre).then(function (retValue) {
+        // getBooksTable成功時
+        this.viewDesserts = cloneDeep(retValue)
+      }.bind(this)).catch(function (e) {
+        // エラー時
+        alert('失敗しました ' + e.message)
+      }).finally(function () {
+        // 成功、失敗どちらの場合でも呼び出される
+      })
+      this.overlay = false
     },
     changeTitle (title) {
       this.editedItem.title = title
@@ -156,6 +160,15 @@ export default Vue.extend({
     },
     changeReview (review) {
       this.editedItem.review = review
+    },
+    gasRun (func, ...args) {
+      return new Promise(function (resolve, reject) {
+        google.script.run.withSuccessHandler(function (retValue) {
+          resolve(retValue)
+        }).withFailureHandler(function (error) {
+          reject(error)
+        })[func](...args)
+      })
     }
   }
 })
