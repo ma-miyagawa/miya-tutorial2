@@ -135,15 +135,8 @@ export default Vue.extend({
     },
     async searchExec () {
       this.overlay = true
-      await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre).then(function (retValue) {
-        // getBooksTable成功時
-        this.viewDesserts = cloneDeep(retValue)
-      }.bind(this)).catch(function (e) {
-        // エラー時
-        alert('失敗しました ' + e.message)
-      }).finally(function () {
-        // 成功、失敗どちらの場合でも呼び出される
-      })
+      const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
+      this.viewDesserts = cloneDeep(result)
       this.overlay = false
     },
     changeTitle (title) {
@@ -168,6 +161,8 @@ export default Vue.extend({
         }).withFailureHandler(function (error) {
           reject(error)
         })[func](...args)
+      }).catch(function (error) {
+        alert('失敗しました' + error.message)
       })
     }
   }
