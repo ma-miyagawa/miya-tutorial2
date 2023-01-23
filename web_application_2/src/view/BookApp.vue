@@ -135,8 +135,12 @@ export default Vue.extend({
     },
     async searchExec () {
       this.overlay = true
-      const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
-      this.viewDesserts = cloneDeep(result)
+      try {
+        const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
+        this.viewDesserts = cloneDeep(result)
+      } catch (error) {
+        alert('失敗しました' + error.message)
+      }
       this.overlay = false
     },
     changeTitle (title) {
@@ -162,7 +166,7 @@ export default Vue.extend({
           reject(error)
         })[func](...args)
       }).catch(function (error) {
-        alert('失敗しました' + error.message)
+        throw error
       })
     }
   }
