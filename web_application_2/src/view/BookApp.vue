@@ -20,6 +20,12 @@
           @changeReview="changeReview"
           >
     </Form>
+    <v-overlay v-model="overlay">
+      <v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular>
+    </v-overlay>
   </div>
 </template>
 <script>
@@ -29,6 +35,7 @@ import List from '../components/List.vue'
 import Form from '../components/Form.vue'
 
 const cloneDeep = require('lodash/cloneDeep')
+const google = window.google
 export default Vue.extend({
   components: {
     Search,
@@ -41,6 +48,7 @@ export default Vue.extend({
       viewDesserts: [],
       editDialog: false,
       confirmDialog: false,
+      overlay: false,
       deleteItemId: -1,
       editedItem: {
         title: '',
@@ -64,27 +72,15 @@ export default Vue.extend({
     }
   },
   created () {
-    this.initialize()
+    // 初期検索処理
+    this.searchExec()
   },
   methods: {
-    initialize () {
-      this.viewDesserts = [
-        { title: 'タイトル１', genre: 'ジャンル１', purchaseDate: '2022/11/11', buyer: '宮川', review: 'AAAA1', id: 1 },
-        { title: 'タイトル２', genre: 'ジャンル１', purchaseDate: '2022/11/12', buyer: '松尾', review: 'AAAA2', id: 2 },
-        { title: 'タイトル３', genre: 'ジャンル２', purchaseDate: '2022/11/13', buyer: '嶋田', review: 'AAAA3', id: 3 },
-        { title: 'タイトル４', genre: 'ジャンル１', purchaseDate: '2022/11/14', buyer: '横山', review: 'AAAA4', id: 4 },
-        { title: 'タイトル４', genre: 'ジャンル１', purchaseDate: '2022/11/15', buyer: '轟', review: 'AAAA5', id: 5 },
-        { title: 'タイトル４', genre: 'ジャンル１', purchaseDate: '2022/11/16', buyer: '野瀬', review: 'AAAA6', id: 6 },
-        { title: 'タイトル２', genre: 'ジャンル２', purchaseDate: '2022/11/17', buyer: '西埜', review: 'AAAA7', id: 7 }
-      ]
-      this.originalDesserts = cloneDeep(this.viewDesserts)
-      this.maxId = 7
-    },
     searchResult (searchTitle, searchGenre) {
       this.searchTitle = searchTitle
       this.searchGenre = searchGenre
       // 検索処理
-      this.viewDesserts = this.searchExec()
+      this.searchExec()
     },
     saveResult (isAddMode) {
       if (isAddMode) {
@@ -98,7 +94,7 @@ export default Vue.extend({
         Object.assign(this.originalDesserts[idx], this.editedItem)
       }
       // 再検索相当処理
-      this.viewDesserts = this.searchExec()
+      this.searchExec()
       // 登録・修正画面ダイアログクローズ
       this.editDialog = false
     },
@@ -107,7 +103,7 @@ export default Vue.extend({
       const idx = this.originalDesserts.findIndex((originalDessert) => originalDessert.id === this.deleteItemId)
       this.originalDesserts.splice(idx, 1)
       // 再検索相当処理
-      this.viewDesserts = this.searchExec()
+      this.searchExec()
       // 削除確認画面ダイアログクローズ
       this.confirmDialog = false
     },
@@ -137,17 +133,15 @@ export default Vue.extend({
       // 削除確認画面ダイアログクローズ
       this.confirmDialog = false
     },
-    searchExec () {
-      const cloneDeep = require('lodash/cloneDeep')
-      let searchDesserts = cloneDeep(this.originalDesserts)
-      // フィルター
-      if (this.searchTitle.length > 0) {
-        searchDesserts = searchDesserts.filter((dessert) => dessert.title === this.searchTitle)
+    async searchExec () {
+      this.overlay = true
+      try {
+        const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
+        this.viewDesserts = cloneDeep(result)
+      } catch (error) {
+        alert('失敗しました' + error.message)
       }
-      if (this.searchGenre.length > 0) {
-        searchDesserts = searchDesserts.filter((dessert) => dessert.genre.indexOf(this.searchGenre) !== -1)
-      }
-      return searchDesserts
+      this.overlay = false
     },
     changeTitle (title) {
       this.editedItem.title = title
@@ -163,6 +157,17 @@ export default Vue.extend({
     },
     changeReview (review) {
       this.editedItem.review = review
+    },
+    gasRun (func, ...args) {
+      return new Promise(function (resolve, reject) {
+        google.script.run.withSuccessHandler(function (retValue) {
+          resolve(retValue)
+        }).withFailureHandler(function (error) {
+          reject(error)
+        })[func](...args)
+      }).catch(function (error) {
+        throw error
+      })
     }
   }
 })
