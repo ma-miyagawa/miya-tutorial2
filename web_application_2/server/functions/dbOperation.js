@@ -27,6 +27,26 @@ export default class dbOperation  {
     this.dbResultSet = this.dbStatement.executeQuery(sqlStatement)
   }
 
+  dbPrepareStatement(sqlStatement) {
+    // プリペアドステートメントの実行
+    this.dbStatement = this.dbConnection.prepareStatement(sqlStatement)
+  }
+
+  dbSetParamInt(num, value) {
+    // パラメータの設定
+    this.dbStatement.setInt(num, value)
+  }
+
+  dbSetParamString(num, value) {
+    // パラメータの設定
+    this.dbStatement.setString(num, value)
+  }
+
+  dbExecuteUpdate() {
+    // 更新の実行
+    this.dbStatement.executeUpdate()
+  }
+
   closeObj() {
     // DBオブジェクトのclose
     if (this.dbResultSet != null) this.dbResultSet.close()
