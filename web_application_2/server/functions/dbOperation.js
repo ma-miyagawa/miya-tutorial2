@@ -10,7 +10,7 @@ export default class dbOperation  {
     const dbResultSet = null
   }
 
-  dbConnect() {
+  connectDb() {
     // DB接続用定数設定
     const connectionName = 'esm-gcp-study:us-central1:modern-study' // Instance_connection_name
     const userName = 'esm' // user_name
@@ -21,28 +21,28 @@ export default class dbOperation  {
     this.dbConnection = Jdbc.getCloudSqlConnection(url, userName, password)
   }
 
-  dbResult(sqlStatement) {
-    // レコードセットの作成
+  makeResultSet(sqlStatement) {
+    // 結果セットの作成
     this.dbStatement = this.dbConnection.createStatement()
     this.dbResultSet = this.dbStatement.executeQuery(sqlStatement)
   }
 
-  dbPrepareStatement(sqlStatement) {
+  execPrepareStatement(sqlStatement) {
     // プリペアドステートメントの実行
     this.dbStatement = this.dbConnection.prepareStatement(sqlStatement)
   }
 
-  dbSetParamInt(num, value) {
+  setParamInt(num, value) {
     // パラメータの設定
     this.dbStatement.setInt(num, value)
   }
 
-  dbSetParamString(num, value) {
+  setParamString(num, value) {
     // パラメータの設定
     this.dbStatement.setString(num, value)
   }
 
-  dbExecuteUpdate() {
+  execDbUpdate() {
     // 更新の実行
     this.dbStatement.executeUpdate()
   }

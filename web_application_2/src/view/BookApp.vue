@@ -136,7 +136,7 @@ export default Vue.extend({
     async saveExec (isAddMode) {
       this.overlay = true
       try {
-        await this.gasRun('updBooksTable', this.editedItem, isAddMode)
+        await this.gasRun('updateBooksTable', this.editedItem, isAddMode)
         const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
         this.viewDesserts = cloneDeep(result)
       } catch (error) {
