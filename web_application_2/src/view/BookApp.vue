@@ -83,18 +83,8 @@ export default Vue.extend({
       this.searchExec()
     },
     saveResult (isAddMode) {
-      if (isAddMode) {
-        // 新規登録の場合
-        this.maxId += 1
-        this.editedItem.id = this.maxId
-        this.originalDesserts.push(this.editedItem)
-      } else {
-        // 修正の場合
-        const idx = this.originalDesserts.findIndex((originalDessert) => originalDessert.id === this.editedItem.id)
-        Object.assign(this.originalDesserts[idx], this.editedItem)
-      }
-      // 再検索相当処理
-      this.searchExec()
+      // 登録処理
+      this.saveExec(isAddMode)
       // 登録・修正画面ダイアログクローズ
       this.editDialog = false
     },
@@ -136,6 +126,17 @@ export default Vue.extend({
     async searchExec () {
       this.overlay = true
       try {
+        const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
+        this.viewDesserts = cloneDeep(result)
+      } catch (error) {
+        alert('失敗しました' + error.message)
+      }
+      this.overlay = false
+    },
+    async saveExec (isAddMode) {
+      this.overlay = true
+      try {
+        await this.gasRun('updateBooksTable', this.editedItem, isAddMode)
         const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
         this.viewDesserts = cloneDeep(result)
       } catch (error) {
