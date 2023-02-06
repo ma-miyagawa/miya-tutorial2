@@ -89,11 +89,8 @@ export default Vue.extend({
       this.editDialog = false
     },
     deleteResult () {
-      // DBから対象行を削除
-      const idx = this.originalDesserts.findIndex((originalDessert) => originalDessert.id === this.deleteItemId)
-      this.originalDesserts.splice(idx, 1)
-      // 再検索相当処理
-      this.searchExec()
+      // 削除処理
+      this.deleteExec()
       // 削除確認画面ダイアログクローズ
       this.confirmDialog = false
     },
@@ -137,6 +134,17 @@ export default Vue.extend({
       this.overlay = true
       try {
         await this.gasRun('updateBooksTable', this.editedItem, isAddMode)
+        const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
+        this.viewDesserts = cloneDeep(result)
+      } catch (error) {
+        alert('失敗しました' + error.message)
+      }
+      this.overlay = false
+    },
+    async deleteExec () {
+      this.overlay = true
+      try {
+        await this.gasRun('deleteBooksTable', this.deleteItemId)
         const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
         this.viewDesserts = cloneDeep(result)
       } catch (error) {
