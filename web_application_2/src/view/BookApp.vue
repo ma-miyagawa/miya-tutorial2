@@ -20,7 +20,7 @@
           @changeReview="changeReview"
           >
     </Form>
-    <v-overlay v-model="overlay">
+    <v-overlay v-model="overlay" z-index="999">
       <v-progress-circular
         indeterminate
         size="64"
@@ -71,26 +71,55 @@ export default Vue.extend({
       maxId: 0
     }
   },
-  created () {
+  async created () {
     // 初期検索処理
-    this.searchExec()
+    this.overlay = true
+    try {
+      const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
+      this.viewDesserts = cloneDeep(result)
+    } catch (error) {
+      alert('失敗しました' + error.message)
+    }
+    this.overlay = false
   },
   methods: {
-    searchResult (searchTitle, searchGenre) {
+    async searchResult (searchTitle, searchGenre) {
       this.searchTitle = searchTitle
       this.searchGenre = searchGenre
       // 検索処理
-      this.searchExec()
+      this.overlay = true
+      try {
+        const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
+        this.viewDesserts = cloneDeep(result)
+      } catch (error) {
+        alert('失敗しました' + error.message)
+      }
+      this.overlay = false
     },
-    saveResult (isAddMode) {
+    async saveResult (isAddMode) {
       // 登録処理
-      this.saveExec(isAddMode)
-      // 登録・修正画面ダイアログクローズ
-      this.editDialog = false
+      this.overlay = true
+      try {
+        await this.gasRun('updateBooksTable', this.editedItem, isAddMode)
+        const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
+        this.viewDesserts = cloneDeep(result)
+        this.editDialog = false
+      } catch (error) {
+        alert('失敗しました' + error.message)
+      }
+      this.overlay = false
     },
-    deleteResult () {
+    async deleteResult () {
       // 削除処理
-      this.deleteExec()
+      this.overlay = true
+      try {
+        await this.gasRun('deleteBooksTable', this.deleteItemId)
+        const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
+        this.viewDesserts = cloneDeep(result)
+      } catch (error) {
+        alert('失敗しました' + error.message)
+      }
+      this.overlay = false
       // 削除確認画面ダイアログクローズ
       this.confirmDialog = false
     },
@@ -119,38 +148,6 @@ export default Vue.extend({
     confirmCancel () {
       // 削除確認画面ダイアログクローズ
       this.confirmDialog = false
-    },
-    async searchExec () {
-      this.overlay = true
-      try {
-        const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
-        this.viewDesserts = cloneDeep(result)
-      } catch (error) {
-        alert('失敗しました' + error.message)
-      }
-      this.overlay = false
-    },
-    async saveExec (isAddMode) {
-      this.overlay = true
-      try {
-        await this.gasRun('updateBooksTable', this.editedItem, isAddMode)
-        const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
-        this.viewDesserts = cloneDeep(result)
-      } catch (error) {
-        alert('失敗しました' + error.message)
-      }
-      this.overlay = false
-    },
-    async deleteExec () {
-      this.overlay = true
-      try {
-        await this.gasRun('deleteBooksTable', this.deleteItemId)
-        const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
-        this.viewDesserts = cloneDeep(result)
-      } catch (error) {
-        alert('失敗しました' + error.message)
-      }
-      this.overlay = false
     },
     changeTitle (title) {
       this.editedItem.title = title
