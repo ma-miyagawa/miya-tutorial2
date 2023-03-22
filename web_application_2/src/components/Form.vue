@@ -1,107 +1,102 @@
 <template>
   <div>
-    <v-dialog
-      v-model="editDialog"
-      max-width="500px"
-    >
-      <v-card>
-        <v-card-title>
-          <span class="text-h5">{{ formTitle }}</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col
-                cols="6"
+    <v-card>
+      <v-card-title>
+        <span class="text-h5">{{ formTitle }}</span>
+      </v-card-title>
+      <v-card-text>
+        <v-container>
+          <v-row>
+            <v-col
+              cols="6"
+            >
+              <v-text-field
+                v-model="innerTitle"
+                label="タイトル"
+              ></v-text-field>
+            </v-col>
+            <v-col
+              cols="6"
+            >
+              <v-text-field
+                v-model="innerGenre"
+                label="ジャンル"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col
+              cols="6"
+            >
+              <v-menu
+                ref="calendarMenu"
+                v-model="calendarMenu"
+                :close-on-content-click="false"
+                transition="scale-transition"
+                offset-y
+                max-width="290px"
+                min-width="auto"
               >
-                <v-text-field
-                  v-model="innerTitle"
-                  label="タイトル"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="6"
-              >
-                <v-text-field
-                  v-model="innerGenre"
-                  label="ジャンル"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col
-                cols="6"
-              >
-                <v-menu
-                  ref="calendarMenu"
-                  v-model="calendarMenu"
-                  :close-on-content-click="false"
-                  transition="scale-transition"
-                  offset-y
-                  max-width="290px"
-                  min-width="auto"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                      v-model="innerPurchaseDate"
-                      label="購入日"
-                      prepend-icon="mdi-calendar"
-                      readonly
-                      v-bind="attrs"
-                      v-on:click="selectedDate = parseDate(innerPurchaseDate)"
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    v-model="selectedDate"
-                    no-title
-                    v-on:input="calendarMenu = false"
-                  ></v-date-picker>
-                </v-menu>
-              </v-col>
-              <v-col
-                cols="6"
-              >
-                <v-text-field
-                  v-model="innerBuyer"
-                  label="購入者"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col
-                cols="12"
-              >
-                <v-textarea
-                  v-model="innerReview"
-                  name="input-7-1"
-                  label="レビュー内容"
-                ></v-textarea>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            class="white--text"
-            color="blue darken-1"
-            tile
-            v-on:click="close()"
-          >
-            キャンセル
-          </v-btn>
-          <v-btn
-            class="white--text"
-            color="blue darken-1"
-            tile
-            v-on:click="saveItem()"
-          >
-            保存
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="innerPurchaseDate"
+                    label="購入日"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on:click="selectedDate = parseDate(innerPurchaseDate)"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  v-model="selectedDate"
+                  no-title
+                  v-on:input="calendarMenu = false"
+                ></v-date-picker>
+              </v-menu>
+            </v-col>
+            <v-col
+              cols="6"
+            >
+              <v-text-field
+                v-model="innerBuyer"
+                label="購入者"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col
+              cols="12"
+            >
+              <v-textarea
+                v-model="innerReview"
+                name="input-7-1"
+                label="レビュー内容"
+              ></v-textarea>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          class="white--text"
+          color="blue darken-1"
+          tile
+          v-on:click="close()"
+        >
+          キャンセル
+        </v-btn>
+        <v-btn
+          class="white--text"
+          color="blue darken-1"
+          tile
+          v-on:click="saveItem()"
+        >
+          保存
+        </v-btn>
+      </v-card-actions>
+    </v-card>
   </div>
 </template>
 
@@ -114,7 +109,6 @@ export default {
     }
   },
   props: {
-    editDialog: Boolean,
     editedItem: {
       title: String,
       genre: String,
