@@ -24,8 +24,6 @@ export default Vue.extend({
   data () {
     return {}
   },
-  created () {
-    this.$router.push({ name: 'Home' })
-  }
+  created () {}
 })
 </script>
