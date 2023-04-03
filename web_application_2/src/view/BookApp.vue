@@ -9,17 +9,6 @@
           @deleteResult="deleteResult"
           @confirmCancel="confirmCancel">
     </List>
-    <Form :editDialog="editDialog"
-          :editedItem="editedItem"
-          @saveResult="saveResult"
-          @editCancel="editCancel"
-          @changeTitle="changeTitle"
-          @changeGenre="changeGenre"
-          @changePurchaseDate="changePurchaseDate"
-          @changeBuyer="changeBuyer"
-          @changeReview="changeReview"
-          >
-    </Form>
     <v-overlay v-model="overlay" z-index="999">
       <v-progress-circular
         indeterminate
@@ -32,43 +21,23 @@
 import Vue from 'vue'
 import Search from '../components/Search.vue'
 import List from '../components/List.vue'
-import Form from '../components/Form.vue'
 
 const cloneDeep = require('lodash/cloneDeep')
 const google = window.google
 export default Vue.extend({
   components: {
     Search,
-    List,
-    Form
+    List
   },
   data () {
     return {
       originalDesserts: [],
       viewDesserts: [],
-      editDialog: false,
       confirmDialog: false,
       overlay: false,
       deleteItemId: -1,
-      editedItem: {
-        title: '',
-        genre: '',
-        purchaseDate: '',
-        buyer: '',
-        review: '',
-        id: -1
-      },
-      defaultItem: {
-        title: '',
-        genre: '',
-        purchaseDate: '',
-        buyer: '',
-        review: '',
-        id: -1
-      },
       searchTitle: '',
-      searchGenre: '',
-      maxId: 0
+      searchGenre: ''
     }
   },
   async created () {
@@ -96,19 +65,6 @@ export default Vue.extend({
       }
       this.overlay = false
     },
-    async saveResult (isAddMode) {
-      // 登録処理
-      this.overlay = true
-      try {
-        await this.gasRun('updateBooksTable', this.editedItem, isAddMode)
-        const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
-        this.viewDesserts = cloneDeep(result)
-        this.editDialog = false
-      } catch (error) {
-        alert('失敗しました' + error.message)
-      }
-      this.overlay = false
-    },
     async deleteResult () {
       // 削除処理
       this.overlay = true
@@ -124,20 +80,12 @@ export default Vue.extend({
       this.confirmDialog = false
     },
     addOpen () {
-      // 選択行の内容を登録画面の項目に設定
-      this.editedItem = Object.assign({}, this.defaultItem)
       // 登録画面ダイアログオープン
-      this.editDialog = true
+      this.$router.push({ name: 'Form', params: { id: -1 } })
     },
     editOpen (item) {
-      // 選択行の内容を修正画面の項目に設定
-      this.editedItem = Object.assign({}, item)
       // 修正画面ダイアログオープン
-      this.editDialog = true
-    },
-    editCancel () {
-      // 登録・修正画面ダイアログクローズ
-      this.editDialog = false
+      this.$router.push({ name: 'Form', params: { id: item.id } })
     },
     confirmOpen (item) {
       // 選択行のIDをdeleteItemIdに設定
@@ -148,21 +96,6 @@ export default Vue.extend({
     confirmCancel () {
       // 削除確認画面ダイアログクローズ
       this.confirmDialog = false
-    },
-    changeTitle (title) {
-      this.editedItem.title = title
-    },
-    changeGenre (genre) {
-      this.editedItem.genre = genre
-    },
-    changePurchaseDate (purchaseDate) {
-      this.editedItem.purchaseDate = purchaseDate
-    },
-    changeBuyer (buyer) {
-      this.editedItem.buyer = buyer
-    },
-    changeReview (review) {
-      this.editedItem.review = review
     },
     gasRun (func, ...args) {
       return new Promise(function (resolve, reject) {

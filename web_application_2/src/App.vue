@@ -11,7 +11,7 @@
     </v-app-bar>
     <v-main>
       <v-container fluid>
-        <book-app />
+        <router-view />
       </v-container>
     </v-main>
   </v-app>
@@ -19,12 +19,8 @@
 
 <script lang="js">
 import Vue from 'vue'
-import BookApp from '@/view/BookApp'
 
 export default Vue.extend({
-  components: {
-    BookApp
-  },
   data () {
     return {}
   },
