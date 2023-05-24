@@ -5,6 +5,7 @@ import getBooksTableById from './functions/getBooksTableById'
 import updateBooksTable from './functions/updBooksTable'
 import deleteBooksTable from './functions/deleteBooksTable'
 import dbOperation from './functions/dbOperation'
+import dbAccessInfo from './functions/dbAccessInfo'
 
 global.doGet = doGet
 global.sample = sample
@@ -13,3 +14,4 @@ global.getBooksTableById = getBooksTableById
 global.updateBooksTable = updateBooksTable
 global.deleteBooksTable = deleteBooksTable
 global.dbOperation = dbOperation
+global.dbAccessInfo = dbAccessInfo
