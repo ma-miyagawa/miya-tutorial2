@@ -16,11 +16,13 @@
           class="d-flex"
           cols="4"
         >
-          <v-text-field
-            label="ジャンル"
+          <v-select
             v-model="searchGenre"
-            solo
-          ></v-text-field>
+            :items="genreItems"
+            item-text="genreName"
+            item-value="genreCode"
+            return-object
+          ></v-select>
         </v-col>
         <v-col
           class="d-flex"
@@ -48,14 +50,18 @@
 export default {
   data () {
     return {
-      searchTitle: '',
-      searchGenre: ''
+      searchTitle: ''
+    }
+  },
+  computed: {
+    genreItems () {
+      return this.$store.getters['genreStore/genres']
     }
   },
   methods: {
     searchItem () {
       // 表示データ設定
-      this.$emit('searchResult', this.searchTitle, this.searchGenre)
+      this.$emit('searchResult', this.searchTitle, this.searchGenre.genreCode)
     }
   }
 }

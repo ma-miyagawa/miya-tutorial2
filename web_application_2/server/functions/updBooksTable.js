@@ -38,14 +38,14 @@ function makeSQLStatement(isAddMode) {
   if (isAddMode) {
     // 新規登録の場合
     return `
-      INSERT INTO booksList_table (title, genre, purchaseDate, buyer, review, insertDate)
+      INSERT INTO booksList_table (title, genreCode, purchaseDate, buyer, review, insertDate)
        values (?, ?, ?, ?, ?, cast( now() as date))`
 
   } else {
     // 修正の場合
     return `
       UPDATE booksList_table SET
-       title = ?, genre = ?, purchaseDate = ?, buyer = ?, review = ?, updateDate = cast( now() as date)
+       title = ?, genreCode = ?, purchaseDate = ?, buyer = ?, review = ?, updateDate = cast( now() as date)
        WHERE id = ?
     `
   }
