@@ -140,7 +140,7 @@ export default {
       get () {
         const genre = {
           genreCode: this.$props.editedItem.genre,
-          genreName: ''
+          genreName: this.$props.editedItem.genre === '' ? '' : this.$store.getters['genreStore/genreItems'].find(genre => genre.genreCode === this.$props.editedItem.genre).genreName
         }
         return genre
       },
@@ -170,7 +170,7 @@ export default {
       }
     },
     genreItems () {
-      return this.$store.getters['genreStore/genres']
+      return this.$store.getters['genreStore/genreItems']
     }
   },
   watch: {

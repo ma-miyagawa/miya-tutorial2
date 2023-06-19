@@ -1,6 +1,7 @@
 /* ------------------------------------------------------------------- *
  * ジャンルストア
  * ------------------------------------------------------------------- */
+const google = window.google
 export default {
   namespaced: true,
   state: {
@@ -8,17 +9,26 @@ export default {
   },
   mutations: {
     // ジャンル一覧を変更するミューテーション
-    setGenres (state, payload) {
-      state.genres = payload.genres
+    setGenres (state, genres) {
+      state.genres = genres
     }
   },
   getters: {
-    genres (store) { return store.genres }
+    genreItems (state) { return state.genres }
   },
   actions: {
-    // ジャンル一覧の更新処理
-    doUpdate ({ commit }, genres) {
-      commit('setGenres', { genres })
+    async doUpdate ({ commit }) {
+      try {
+        await new Promise(function (resolve) {
+          google.script.run.withSuccessHandler(function (retValue) {
+            resolve(retValue)
+          }).getGenreTable()
+        }).then(retValue => {
+          commit('setGenres', retValue)
+        })
+      } catch (error) {
+        throw error
+      }
     }
   }
 }

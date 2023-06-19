@@ -3,7 +3,7 @@
  * @param
  * @returns
  */
-export default function getBooksTable (searchTitle, searchGenre) {
+export default function getBooksTable (searchTitle, searchGenre, genres) {
 
   let books = []
   // DB操作用オブジェクト生成
@@ -14,7 +14,7 @@ export default function getBooksTable (searchTitle, searchGenre) {
 
   // 検索用SQL作成
   const sqlForSelect = makeSQLStatement(searchTitle, searchGenre)
-    
+
   // 結果取得
   connectObj.makeResultSet(sqlForSelect)
   const results = connectObj.getResults()
@@ -22,7 +22,7 @@ export default function getBooksTable (searchTitle, searchGenre) {
     const book = {
       id: results.getInt('id'),
       title: results.getString('title'),
-      genre: results.getString('genreName'),
+      genre: genres.find(genre => genre.genreCode === results.getString('genreCode')).genreName,
       purchaseDate: results.getString('purchaseDate').substr(0,4) + '/' + 
         results.getString('purchaseDate').substr(4,2) + '/' +
         results.getString('purchaseDate').substr(6,2) ,
@@ -39,16 +39,16 @@ export default function getBooksTable (searchTitle, searchGenre) {
 
 function makeSQLStatement(searchTitle, searchGenre) {
 
-  let selSql = `SELECT id, title, genreName, purchaseDate, buyer, review FROM booksList_table A, genre_table B WHERE A.genreCode = B.genreCode `
+  let selSql = `SELECT id, title, genreCode, purchaseDate, buyer, review FROM booksList_table `
   if (searchTitle.length > 0 && searchGenre.length > 0) {
     // タイトル、ジャンル両方入力時
-    selSql += `AND title='${searchTitle}' AND A.genreCode = '${searchGenre}'`
+    selSql += `where title='${searchTitle}' AND genreCode = '${searchGenre}'`
   } else if (searchTitle.length > 0 && searchGenre.length === 0) {
     // タイトルのみ入力時
-    selSql += `AND title='${searchTitle}'`
+    selSql += `where title='${searchTitle}'`
   } else if (searchTitle.length === 0 && searchGenre.length > 0) {
     // ジャンルのみ入力時
-    selSql += `AND A.genreCode = '${searchGenre}'`
+    selSql += `where genreCode = '${searchGenre}'`
   }
   return selSql
 }

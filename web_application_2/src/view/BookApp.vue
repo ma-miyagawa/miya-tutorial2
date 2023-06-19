@@ -44,9 +44,8 @@ export default Vue.extend({
     // 初期検索処理
     this.overlay = true
     try {
-      const resultGenre = await this.gasRun('getGenreTable')
-      this.$store.dispatch('genreStore/doUpdate', resultGenre)
-      const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
+      await this.$store.dispatch('genreStore/doUpdate')
+      const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre, this.$store.getters['genreStore/genreItems'])
       this.viewDesserts = cloneDeep(result)
     } catch (error) {
       alert('失敗しました' + error.message)
@@ -60,7 +59,7 @@ export default Vue.extend({
       // 検索処理
       this.overlay = true
       try {
-        const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
+        const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre, this.$store.getters['genreStore/genreItems'])
         this.viewDesserts = cloneDeep(result)
       } catch (error) {
         alert('失敗しました' + error.message)
@@ -72,7 +71,7 @@ export default Vue.extend({
       this.overlay = true
       try {
         await this.gasRun('deleteBooksTable', this.deleteItemId)
-        const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
+        const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre, this.$store.getters['genreStore/genreItems'])
         this.viewDesserts = cloneDeep(result)
       } catch (error) {
         alert('失敗しました' + error.message)

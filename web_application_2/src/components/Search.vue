@@ -50,12 +50,13 @@
 export default {
   data () {
     return {
-      searchTitle: ''
+      searchTitle: '',
+      searchGenre: ''
     }
   },
   computed: {
     genreItems () {
-      return this.$store.getters['genreStore/genres']
+      return this.$store.getters['genreStore/genreItems']
     }
   },
   methods: {
