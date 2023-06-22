@@ -39,11 +39,17 @@ export default function getBooksTable (searchTitle, searchGenre) {
 
 function makeSQLStatement(searchTitle, searchGenre) {
 
-  let selSql = `SELECT B.id, B.title, G.genreName, B.purchaseDate, B.buyer, B.review FROM booksList_table AS B `
-  selSql += `INNER JOIN genre_table AS G ON B.genreCode = G.genreCode `
+  let selSql = `
+    SELECT B.id, B.title, G.genreName, B.purchaseDate, B.buyer, B.review 
+    FROM booksList_table AS B 
+    INNER JOIN genre_table AS G ON B.genreCode = G.genreCode 
+  `
   if (searchTitle.length > 0 && searchGenre.length > 0) {
     // タイトル、ジャンル両方入力時
-    selSql += `where B.title='${searchTitle}' AND B.genreCode = '${searchGenre}'`
+    selSql += `
+      where B.title='${searchTitle}' 
+      AND B.genreCode = '${searchGenre}'
+    `
   } else if (searchTitle.length > 0 && searchGenre.length === 0) {
     // タイトルのみ入力時
     selSql += `where B.title='${searchTitle}'`
