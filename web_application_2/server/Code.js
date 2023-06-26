@@ -4,6 +4,7 @@ import getBooksTable from './functions/getBooksTable'
 import getBooksTableById from './functions/getBooksTableById'
 import updateBooksTable from './functions/updBooksTable'
 import deleteBooksTable from './functions/deleteBooksTable'
+import getGenreTable from './functions/getGenreTable'
 import dbOperation from './functions/dbOperation'
 import dbAccessInfo from './functions/dbAccessInfo'
 
@@ -13,5 +14,6 @@ global.getBooksTable = getBooksTable
 global.getBooksTableById = getBooksTableById
 global.updateBooksTable = updateBooksTable
 global.deleteBooksTable = deleteBooksTable
+global.getGenreTable = getGenreTable
 global.dbOperation = dbOperation
 global.dbAccessInfo = dbAccessInfo

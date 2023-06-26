@@ -5,12 +5,14 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import templateStore from '@/store/templateStore'
+import genreStore from '@/store/genreStore'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   namespaced: true,
   modules: {
-    'templateStore': templateStore
+    'templateStore': templateStore,
+    'genreStore': genreStore
   }
 })

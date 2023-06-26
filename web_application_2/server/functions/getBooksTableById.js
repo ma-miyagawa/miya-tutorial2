@@ -21,7 +21,7 @@ export default function getBooksTableById (id) {
   const book = {
     id: results.getInt('id'),
     title: results.getString('title'),
-    genre: results.getString('genre'),
+    genre: results.getString('genreCode'),
     purchaseDate: results.getString('purchaseDate').substr(0,4) + '/' + 
       results.getString('purchaseDate').substr(4,2) + '/' +
       results.getString('purchaseDate').substr(6,2) ,
@@ -36,6 +36,6 @@ export default function getBooksTableById (id) {
 
 function makeSQLStatement(id) {
 
-  return `SELECT id, title, genre, purchaseDate, buyer, review FROM booksList_table WHERE id='${id}'`
+  return `SELECT id, title, genreCode, purchaseDate, buyer, review FROM booksList_table WHERE id='${id}'`
 
 }

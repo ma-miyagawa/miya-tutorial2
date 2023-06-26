@@ -18,10 +18,13 @@
             <v-col
               cols="6"
             >
-              <v-text-field
+              <v-select
                 v-model="innerGenre"
-                label="ジャンル"
-              ></v-text-field>
+                :items="genreItems"
+                item-text="genreName"
+                item-value="genreCode"
+                return-object
+              ></v-select>
             </v-col>
           </v-row>
           <v-row>
@@ -135,10 +138,14 @@ export default {
     },
     innerGenre: {
       get () {
-        return this.$props.editedItem.genre
+        const genre = {
+          genreCode: this.$props.editedItem.genre,
+          genreName: this.$props.editedItem.genre === '' ? '' : this.$store.getters['genreStore/genreItems'].find(genre => genre.genreCode === this.$props.editedItem.genre).genreName
+        }
+        return genre
       },
       set (val) {
-        this.$emit('changeGenre', val)
+        this.$emit('changeGenre', val.genreCode)
       }
     },
     innerPurchaseDate: {
@@ -161,6 +168,9 @@ export default {
       set (val) {
         this.$emit('changeReview', val)
       }
+    },
+    genreItems () {
+      return this.$store.getters['genreStore/genreItems']
     }
   },
   watch: {
