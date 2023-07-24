@@ -45,7 +45,9 @@ export default Vue.extend({
     this.overlay = true
     try {
       await this.$store.dispatch('genreStore/doUpdate')
-      const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre, this.$store.getters['genreStore/genreItems'])
+      this.searchTitle = this.$store.getters['searchStore/searchTitle']
+      this.searchGenre = this.$store.getters['searchStore/searchGenre']
+      const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
       this.viewDesserts = cloneDeep(result)
     } catch (error) {
       alert('失敗しました' + error.message)
@@ -56,6 +58,7 @@ export default Vue.extend({
     async searchResult (searchTitle, searchGenre) {
       this.searchTitle = searchTitle
       this.searchGenre = searchGenre
+      this.$store.dispatch('searchStore/doUpdate', { title: searchTitle, genre: searchGenre })
       // 検索処理
       this.overlay = true
       try {

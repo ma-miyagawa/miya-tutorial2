@@ -22,6 +22,7 @@
             item-text="genreName"
             item-value="genreCode"
             return-object
+            :clearable="true"
           ></v-select>
         </v-col>
         <v-col
@@ -50,11 +51,30 @@
 export default {
   data () {
     return {
-      searchTitle: '',
-      searchGenre: ''
     }
   },
   computed: {
+    searchTitle: {
+      get () {
+        return this.$store.getters['searchStore/searchTitle']
+      },
+      set (val) {
+        this.searchTitle = val
+      }
+    },
+    searchGenre: {
+      get () {
+        const genre = {
+          genreCode: this.$store.getters['searchStore/searchGenre'],
+          genreName: this.$store.getters['searchStore/searchGenre'] === '' ? '' : this.$store.getters['genreStore/genreItems'].find(genre => genre.genreCode === this.$store.getters['searchStore/searchGenre']).genreName
+        }
+        return genre
+      },
+      set (val) {
+        // クリアした場合undefinedになる
+        this.searchGenre.genreCode = typeof val === 'undefined' ? '' : val.genreCode
+      }
+    },
     genreItems () {
       return this.$store.getters['genreStore/genreItems']
     }
