@@ -59,7 +59,7 @@ export default {
         return this.$store.getters['searchStore/searchTitle']
       },
       set (val) {
-        this.searchTitle = val
+        this.$emit('changeSearchTitle', val)
       }
     },
     searchGenre: {
@@ -72,7 +72,7 @@ export default {
       },
       set (val) {
         // クリアした場合undefinedになる
-        this.searchGenre.genreCode = typeof val === 'undefined' ? '' : val.genreCode
+        this.$emit('changeSearchGenre', typeof val === 'undefined' ? '' : val.genreCode)
       }
     },
     genreItems () {
@@ -82,7 +82,7 @@ export default {
   methods: {
     searchItem () {
       // 表示データ設定
-      this.$emit('searchResult', this.searchTitle, this.searchGenre.genreCode)
+      this.$emit('searchResult')
     }
   }
 }

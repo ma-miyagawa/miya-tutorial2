@@ -1,6 +1,9 @@
 <template>
   <div>
-    <Search @searchResult="searchResult"></Search>
+    <Search @searchResult="searchResult"
+            @changeSearchTitle="changeSearchTitle"
+            @changeSearchGenre="changeSearchGenre">
+    </Search>
     <List :viewDesserts="viewDesserts"
           :confirmDialog="confirmDialog"
           @editOpen="editOpen"
@@ -55,10 +58,8 @@ export default Vue.extend({
     this.overlay = false
   },
   methods: {
-    async searchResult (searchTitle, searchGenre) {
-      this.searchTitle = searchTitle
-      this.searchGenre = searchGenre
-      this.$store.dispatch('searchStore/doUpdate', { title: searchTitle, genre: searchGenre })
+    async searchResult () {
+      this.$store.dispatch('searchStore/doUpdate', { title: this.searchTitle, genre: this.searchGenre })
       // 検索処理
       this.overlay = true
       try {
@@ -100,6 +101,12 @@ export default Vue.extend({
     confirmCancel () {
       // 削除確認画面ダイアログクローズ
       this.confirmDialog = false
+    },
+    changeSearchTitle (title) {
+      this.searchTitle = title
+    },
+    changeSearchGenre (genre) {
+      this.searchGenre = genre
     },
     gasRun (func, ...args) {
       return new Promise(function (resolve, reject) {
