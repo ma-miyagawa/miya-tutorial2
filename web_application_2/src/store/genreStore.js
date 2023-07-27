@@ -14,7 +14,15 @@ export default {
     }
   },
   getters: {
-    genreItems (state) { return state.genres }
+    genreItems (state) { return state.genres },
+    getGenre (state) {
+      return function (code) {
+        return {
+          genreCode: code,
+          genreName: code === '' ? '' : state.genres.find(genre => genre.genreCode === code).genreName
+        }
+      }
+    }
   },
   actions: {
     async doUpdate ({ commit }) {

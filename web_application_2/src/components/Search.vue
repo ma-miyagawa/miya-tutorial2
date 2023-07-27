@@ -64,11 +64,7 @@ export default {
     },
     searchGenre: {
       get () {
-        const genre = {
-          genreCode: this.$store.getters['searchStore/searchGenre'],
-          genreName: this.$store.getters['searchStore/searchGenre'] === '' ? '' : this.$store.getters['genreStore/genreItems'].find(genre => genre.genreCode === this.$store.getters['searchStore/searchGenre']).genreName
-        }
-        return genre
+        return this.$store.getters['genreStore/getGenre'](this.$store.getters['searchStore/searchGenre'])
       },
       set (val) {
         // クリアした場合undefinedになる
