@@ -64,7 +64,7 @@ export default {
     },
     searchGenre: {
       get () {
-        return this.$store.getters['genreStore/getGenre'](this.$store.getters['searchStore/searchGenre'])
+        return this.$store.getters['searchStore/searchGenre']
       },
       set (val) {
         // クリアした場合undefinedになる

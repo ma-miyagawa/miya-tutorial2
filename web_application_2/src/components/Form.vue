@@ -138,7 +138,7 @@ export default {
     },
     innerGenre: {
       get () {
-        return this.$store.getters['genreStore/getGenre'](this.$store.getters['searchStore/searchGenre'])
+        return this.$props.editedItem.genre
       },
       set (val) {
         this.$emit('changeGenre', val.genreCode)
