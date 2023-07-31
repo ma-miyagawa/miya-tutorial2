@@ -22,6 +22,7 @@
             item-text="genreName"
             item-value="genreCode"
             return-object
+            :clearable="true"
           ></v-select>
         </v-col>
         <v-col
@@ -50,11 +51,26 @@
 export default {
   data () {
     return {
-      searchTitle: '',
-      searchGenre: ''
     }
   },
   computed: {
+    searchTitle: {
+      get () {
+        return this.$store.getters['searchStore/searchTitle']
+      },
+      set (val) {
+        this.$emit('changeSearchTitle', val)
+      }
+    },
+    searchGenre: {
+      get () {
+        return this.$store.getters['searchStore/searchGenre']
+      },
+      set (val) {
+        // クリアした場合undefinedになる
+        this.$emit('changeSearchGenre', typeof val === 'undefined' ? '' : val.genreCode)
+      }
+    },
     genreItems () {
       return this.$store.getters['genreStore/genreItems']
     }
@@ -62,7 +78,7 @@ export default {
   methods: {
     searchItem () {
       // 表示データ設定
-      this.$emit('searchResult', this.searchTitle, this.searchGenre.genreCode)
+      this.$emit('searchResult')
     }
   }
 }

@@ -138,11 +138,7 @@ export default {
     },
     innerGenre: {
       get () {
-        const genre = {
-          genreCode: this.$props.editedItem.genre,
-          genreName: this.$props.editedItem.genre === '' ? '' : this.$store.getters['genreStore/genreItems'].find(genre => genre.genreCode === this.$props.editedItem.genre).genreName
-        }
-        return genre
+        return this.$props.editedItem.genre
       },
       set (val) {
         this.$emit('changeGenre', val.genreCode)

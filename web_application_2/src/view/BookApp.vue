@@ -1,6 +1,9 @@
 <template>
   <div>
-    <Search @searchResult="searchResult"></Search>
+    <Search @searchResult="searchResult"
+            @changeSearchTitle="changeSearchTitle"
+            @changeSearchGenre="changeSearchGenre">
+    </Search>
     <List :viewDesserts="viewDesserts"
           :confirmDialog="confirmDialog"
           @editOpen="editOpen"
@@ -45,7 +48,9 @@ export default Vue.extend({
     this.overlay = true
     try {
       await this.$store.dispatch('genreStore/doUpdate')
-      const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre, this.$store.getters['genreStore/genreItems'])
+      this.searchTitle = this.$store.getters['searchStore/searchTitle']
+      this.searchGenre = this.$store.getters['searchStore/searchGenre']
+      const result = await this.gasRun('getBooksTable', this.searchTitle, this.searchGenre)
       this.viewDesserts = cloneDeep(result)
     } catch (error) {
       alert('失敗しました' + error.message)
@@ -53,9 +58,8 @@ export default Vue.extend({
     this.overlay = false
   },
   methods: {
-    async searchResult (searchTitle, searchGenre) {
-      this.searchTitle = searchTitle
-      this.searchGenre = searchGenre
+    async searchResult () {
+      this.$store.dispatch('searchStore/doUpdate', { title: this.searchTitle, genre: this.searchGenre })
       // 検索処理
       this.overlay = true
       try {
@@ -97,6 +101,12 @@ export default Vue.extend({
     confirmCancel () {
       // 削除確認画面ダイアログクローズ
       this.confirmDialog = false
+    },
+    changeSearchTitle (title) {
+      this.searchTitle = title
+    },
+    changeSearchGenre (genre) {
+      this.searchGenre = genre
     },
     gasRun (func, ...args) {
       return new Promise(function (resolve, reject) {
